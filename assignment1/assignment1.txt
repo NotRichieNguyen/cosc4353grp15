@@ -21,7 +21,7 @@ manage and optimize volunteer activities.
 
 Group Contribution:
 
-Richie Nguyen:
+Richie Nguyen: Wrote the initial thoughts on the project.
 
 Wilson Huang: Created the high level architecture design.
 
