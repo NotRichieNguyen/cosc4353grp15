@@ -17,7 +17,7 @@ feedback regularly. This approach also allows us to release important features q
 using the app sooner. Overall, Agile offers the flexibility and collaboration needed to create an app that truly helps 
 manage and optimize volunteer activities.
 
-3. (refer to JPG file)
+3. (refer to png file)
 
 Group Contribution:
 
