@@ -27,4 +27,4 @@ Wilson Huang: Created the high level architecture design.
 
 Danny Nguyen: Helped Wilson create the high level architecture design.
 
-Vincent Chen:
+Vincent Chen: Wrote the development methodology.
