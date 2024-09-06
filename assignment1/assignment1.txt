@@ -17,14 +17,18 @@ feedback regularly. This approach also allows us to release important features q
 using the app sooner. Overall, Agile offers the flexibility and collaboration needed to create an app that truly helps 
 manage and optimize volunteer activities.
 
-3. (refer to JPG file)
+3. (refer to png file)
 
 Group Contribution:
 
-Richie Nguyen:
+Richie Nguyen: Wrote the initial thoughts on the project.
 
-Wilson Huang:
+Wilson Huang: Created the high level architecture design.
 
-Danny Nguyen:
+Danny Nguyen: Helped Wilson create the high level architecture design.
 
-Vincent Chen:
+<<<<<<< Updated upstream
+Vincent Chen: Wrote the development methodology.
+=======
+Vincent Chen: Wrote the development methodology.
+>>>>>>> Stashed changes

@@ -1,11 +1,18 @@
 import express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
+import User from "./models/user.model.js";
 dotenv.config();
 
 const app = express();
 
-app.post("/users", async (req, res) => {
+app.use(express.json());
+
+// app.get("/api/users", (req, res) => {
+//   res.send("server @ /api/users is ready");
+// });
+
+app.post("/api/users", async (req, res) => {
   const user = req.body;
 
   if (!user.name) {
