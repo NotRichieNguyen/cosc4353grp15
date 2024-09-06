@@ -25,6 +25,6 @@ Richie Nguyen: Wrote the initial thoughts on the project.
 
 Wilson Huang: Created the high level architecture design.
 
-Danny Nguyen:
+Danny Nguyen: Helped Wilson create the high level architecture design.
 
 Vincent Chen:
