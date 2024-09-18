@@ -1,0 +1,94 @@
+.login-root {
+  margin-top: 32.5vh;
+  margin-left: 37.5vw;
+  width: 25vw;
+  height: 35vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  background-color: #0e0e0ef3;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.login-header {
+  font-weight: 500;
+  font-size: 1.8em;
+  margin-top: 1em;
+  margin-left: 1.6em;
+}
+
+.login-username,
+.login-password {
+  width: 75%;
+  height: 10%;
+  background-color: #0e0e0ef3;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin-top: 30px;
+  border-bottom: 2px solid #fff;
+  margin-left: 3.5em;
+}
+
+.login-username:focus,
+.login-password {
+  outline: none;
+  border-bottom: 2px solid #fff;
+}
+
+.login-root {
+  background-color: #0e0e0e;
+}
+
+.login-no-account {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 53%;
+  margin-top: 3%;
+  margin-left: 10%;
+  font-size: 0.85rem;
+}
+
+.login-submit {
+  height: 10%;
+  width: 20%;
+  margin-left: 70%;
+  margin-top: 3%;
+}
+
+.button {
+  background-color: #ffffff00;
+  color: #fff;
+  width: 8.5em;
+  height: 2.9em;
+  border: #00000000 0.2em solid;
+  border-radius: 11px;
+  text-align: right;
+  transition: all 0.6s ease;
+}
+
+.button:hover {
+  background-color: #3654ff;
+}
+
+.button svg {
+  width: 1.6em;
+  margin: -0.2em 0.8em 1em;
+  position: absolute;
+  display: flex;
+  transition: all 0.6s ease;
+}
+
+.button:hover svg {
+  transform: translateX(5px);
+}
+
+.text {
+  margin: 0 1.5em;
+}
