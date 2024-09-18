@@ -1,0 +1,92 @@
+.sidebar {
+  position: fixed;
+  top: 0px;
+  width: 10%;
+  height: 100%;
+  box-shadow: 5px 0px 20px 3px grey;
+  transition: left 0.3s ease;
+  padding: 20px;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: black;
+}
+
+.sidebarContents {
+  width: 100%;
+  height: 100%;
+  gap: 50px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebarLinks {
+  width: 70%;
+  height: 100%;
+  gap: 1em;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.websiteNameContainer {
+  width: 100%;
+  height: 15%;
+  font-weight: bold;
+  font-family: "Courier New", Courier, monospace;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.volunteering {
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+.university {
+  color: red;
+  letter-spacing: 1px;
+  font-size: 10px;
+  margin: 0px;
+}
+
+.profileContainer {
+  width: 100%;
+  margin-bottom: 50px;
+  background-color: blue;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.profilePictureContainer {
+  width: 50%;
+  height: 10%;
+  background-color: red;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profilePicture {
+  width: 50px;
+  height: 50px;
+  background-color: grey;
+  border-radius: 50%;
+}
+
+.profileName {
+  width: 50%;
+  height: 10%;
+  background-color: purple;
+}

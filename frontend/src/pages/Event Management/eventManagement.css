@@ -1,0 +1,12 @@
+.eventmanagement {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  height: 90vh;
+}
+
+.em_container {
+  width: 50%;
+  height: 80%;
+  background-color: black;
+}

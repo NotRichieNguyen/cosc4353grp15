@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Header from "./components/header";
+import Sidebar from "./components/Sidebar/sidebar";
+import Home from "./pages/home";
+import Login from "./pages/login";
+import Register from "./pages/register";
+import Profile from "./pages/profile";
+import EventManagement from "./pages/Event Management/eventManagement";
+import VolunteerMatching from "./pages/volunteerMatching";
+import VolunteerHistory from "./pages/volunteerHistory";
+import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Sidebar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/event-matching" element={<EventManagement />} />
+        <Route path="/volunteer-matching" element={<VolunteerMatching />} />
+        <Route path="/volunteer-history" element={<VolunteerHistory />} />
+      </Routes>
+    </Router>
   );
 }
 
