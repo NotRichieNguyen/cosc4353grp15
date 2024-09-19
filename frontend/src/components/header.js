@@ -6,7 +6,7 @@ const Header = () => {
     <header>
       <li>
         {" "}
-        <Link to="/"> volUHnteer </Link>{" "}
+        <Link to="/"> volunteering </Link>{" "}
       </li>
 
       <nav>
@@ -15,7 +15,7 @@ const Header = () => {
             <Link to="/login">Login</Link>
             <Link to="/register">Register</Link>
             <Link to="/profile">Profile</Link>
-            <Link to="/event-matching"> Event Matching </Link>
+            <Link to="/event-matching"> Event Management </Link>
             <Link to="/volunteer-matching"> Volunteer Matching </Link>
             <Link to="/volunteer-history"> Volunteer History </Link>
           </li>
