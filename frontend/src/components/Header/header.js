@@ -1,12 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import './header.css';
 
 const Header = () => {
   return (
     <header>
       <li>
-        {" "}
-        <Link to="/"> volunteering </Link>{" "}
+        <div className="navbarWebsiteName">
+          <p className="nav_university"> UNIVERSITY OF HOUSTON </p>
+          <Link className="nav_volunteering" to="/">  volunteering  </Link>
+        </div>
       </li>
 
       <nav>

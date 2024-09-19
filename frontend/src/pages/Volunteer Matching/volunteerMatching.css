@@ -1,0 +1,42 @@
+.volunteerMatching {
+    font-family: "Inter", sans-serif;
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    height: 90vh;
+}
+
+.vm_container {
+    width: 100%;
+    height: 30%;
+    border-style: solid;
+    background-color: black;
+    box-shadow: 0px 5px 10px 2px grey;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.volunteerInfo {
+    width: 100%;
+}
+
+.volunteerInfo input{
+    background-color: transparent;
+    width: 45%;
+    height: 30px;
+    border: none;
+    border-bottom: 2px solid #fff;
+    border-radius: 5px;
+    color: white;
+}
+
+.volunteerInfo input::placeholder{
+    color: white;
+}
+
+
+.volunteerName {
+    margin-right: 9%;
+}

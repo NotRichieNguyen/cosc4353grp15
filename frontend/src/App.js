@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Header from "./components/header";
+import Header from "./components/Header/header";
 import Sidebar from "./components/Sidebar/sidebar";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import Profile from "./pages/profile";
 import EventManagement from "./pages/Event Management/eventManagement";
-import VolunteerMatching from "./pages/volunteerMatching";
+import VolunteerMatching from "./pages/Volunteer Matching/volunteerMatching";
 import VolunteerHistory from "./pages/volunteerHistory";
 import "./App.css";
 
