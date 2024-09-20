@@ -7,13 +7,16 @@ import Register from "./pages/Registration Form/register";
 import Profile from "./pages/profile";
 import EventManagement from "./pages/Event Management/eventManagement";
 import VolunteerMatching from "./pages/Volunteer Matching/volunteerMatching";
-import VolunteerHistory from "./pages/volunteerHistory";
+import VolunteerHistory from "./pages/Volunteer History/volunteerHistory";
+import Notification from "./components/Notification/notification";
+
 import "./App.css";
 
 function App() {
   return (
     <Router>
       <Header />
+      {/* <Notification/> */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
