@@ -1,6 +1,10 @@
-.login-root {
-  margin-top: 32.5vh;
-  margin-left: 37.5vw;
+.register-root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-container {
   width: 25vw;
   height: 35vh;
   display: flex;
@@ -15,15 +19,15 @@
   color: #fff;
 }
 
-.login-header {
+.register-header {
   font-weight: 500;
   font-size: 1.8em;
   margin-top: 1em;
   margin-left: 1.6em;
 }
 
-.login-username,
-.login-password {
+.register-username,
+.register-password {
   width: 75%;
   height: 10%;
   background-color: #0e0e0ef3;
@@ -35,17 +39,13 @@
   margin-left: 3.5em;
 }
 
-.login-username:focus,
-.login-password {
+.register-username:focus,
+.register-password {
   outline: none;
   border-bottom: 2px solid #fff;
 }
 
-.login-root {
-  background-color: #0e0e0e;
-}
-
-.login-no-account {
+.register-no-account {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -55,7 +55,7 @@
   font-size: 0.85rem;
 }
 
-.login-submit {
+.register-submit {
   height: 10%;
   width: 20%;
   margin-left: 70%;

@@ -3,7 +3,7 @@ import Header from "./components/Header/header";
 import Sidebar from "./components/Sidebar/sidebar";
 import Home from "./pages/home";
 import Login from "./pages/Login Form/login";
-import Register from "./pages/register";
+import Register from "./pages/Registration Form/register";
 import Profile from "./pages/profile";
 import EventManagement from "./pages/Event Management/eventManagement";
 import VolunteerMatching from "./pages/Volunteer Matching/volunteerMatching";
