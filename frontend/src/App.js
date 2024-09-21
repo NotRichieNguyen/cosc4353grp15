@@ -4,7 +4,7 @@ import Sidebar from "./components/Sidebar/sidebar";
 import Home from "./pages/home";
 import Login from "./pages/Login Form/login";
 import Register from "./pages/Registration Form/register";
-import Profile from "./pages/profile";
+import ProfileManagement from "./pages/Profile Management/profile";
 import EventManagement from "./pages/Event Management/eventManagement";
 import VolunteerMatching from "./pages/Volunteer Matching/volunteerMatching";
 import VolunteerHistory from "./pages/Volunteer History/volunteerHistory";
@@ -21,7 +21,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={<ProfileManagement />} />
         <Route path="/event-matching" element={<EventManagement />} />
         <Route path="/volunteer-matching" element={<VolunteerMatching />} />
         <Route path="/volunteer-history" element={<VolunteerHistory />} />
