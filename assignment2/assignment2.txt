@@ -1,13 +1,15 @@
-1. Design and Development Methodology
+1. GitHub Repository Link
+ https://github.com/NotRichieNguyen/cosc4353grp15
 
-For the development methodology, we have continued using the Agile approach since assignment 1.
-Our development process remains step-by-step. It seems to be the most efficient methodology.
+2. Design and Development Methodology
+We've stayed committed to our original strategy of designing a system that matches volunteers to events based on their skills. This structured approach has kept our development process organized and focused. By following Agile methodology, we've been able to adapt to changes and make ongoing improvements as needed. This has also helped us foster collaboration, ensuring everyone stays aligned and on task.
 
-2. Front-End Technologies and Responsibilities
+3. Front-End Technologies and Responsibilities
+We are using React along with bootstrap for our front end. React serves as a great technology for organizing our project and developing the pages. Bootstrap allows us to utilize pre-styled React components which speeds up development. Richie Nguyen created the login/registration components. Wilson Huang created the event management and volunteer matching form. Danny Nguyen created the notification system and volunteer history. Vincent Chen created the User Profile Management component.
 
-We used HTML, CSS, and React. 
+4. Screenshots of front end are in the assignment2 folder
 
-3. Group Contribution:
+Group Contributions:
 
 Richie Nguyen: Login and Registration Form
 
@@ -17,4 +19,4 @@ Danny Nguyen: Notification System and Volunteer History
 
 Vincent Chen: User Profile Management
 
-4. Screenshots of front end are in the assignment2 folder
+
