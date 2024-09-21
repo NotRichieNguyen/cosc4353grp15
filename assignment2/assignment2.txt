@@ -1,0 +1,20 @@
+1. Design and Development Methodology
+
+For the development methodology, we have continued using the Agile approach since assignment 1.
+Our development process remains step-by-step. It seems to be the most efficient methodology.
+
+2. Front-End Technologies and Responsibilities
+
+We used HTML, CSS, and React. 
+
+3. Group Contribution:
+
+Richie Nguyen: Login and Registration Form
+
+Wilson Huang: Event Management and Volunteer Matching Form
+
+Danny Nguyen: Notification System and Volunteer History
+
+Vincent Chen: User Profile Management
+
+4. Screenshots of front end are in the assignment2 folder
