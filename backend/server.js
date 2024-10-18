@@ -16,10 +16,45 @@ app.use(
 );
 app.use(express.json());
 
-// app.get("/api/users", (req, res) => {
-//   res.send("server @ /api/users is ready");
-// });
+// authentication
+const users = []; // Array to store users
 
+// Registration endpoint
+app.post("/register", (req, res) => {
+  const { username, password } = req.body;
+  console.log(`Registering user: ${username}`);
+
+  const userExists = users.find((user) => user.username === username);
+
+  if (userExists) {
+    console.log("User already exists.");
+    return res.status(400).json({ message: "Username already exists." });
+  }
+
+  users.push({ username, password });
+  console.log("User registered successfully.");
+  res.status(201).json({ message: "User registered successfully." });
+});
+
+// Login endpoint
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+  console.log(`Logging in user: ${username}`);
+
+  const user = users.find((u) => u.username === username && u.password === password);
+
+  if (user) {
+    console.log("Login successful.");
+    res.status(200).json({ message: "Login successful." });
+  } else {
+    console.log("Invalid credentials.");
+    res.status(401).json({ message: "Invalid username or password." });
+  }
+});
+
+
+
+// event management
 let mockEvents = [
   {
     id: 1,
@@ -40,26 +75,6 @@ let mockEvents = [
     description: "Lead a charity 5K run.",
   },
 ];
-
-app.post("/api/users", async (req, res) => {
-  const user = req.body;
-
-  if (!user.name) {
-    return res
-      .status(400)
-      .json({ success: false, message: "User does not exist" });
-  }
-
-  const newUser = new User(user);
-
-  try {
-    await newUser.save();
-    res.status(201).json({ success: true, data: newUser });
-  } catch (error) {
-    console.error("Error in create user:", error.message);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-});
 
 app.get("/api/events", (req, res) => {
   res.json(mockEvents);
