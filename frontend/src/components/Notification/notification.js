@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./notification.css";
 
 const Notification = () => {
     const [notifications, setNotifications] = useState([]);
     let notificationCounter = 0;
 
-    // Function to show notifications based on the type
+    // Fetch notifications from backend on load
+    useEffect(() => {
+        fetch("http://localhost:5000/api/notifications")
+            .then((response) => response.json())
+            .then((data) => setNotifications(data))
+            .catch((error) => console.error("Error fetching notifications:", error));
+    }, []);
+
+    // Function to show new notification (for demo purposes)
     const showNotification = (type) => {
         const newNotification = {
             id: notificationCounter++,
@@ -16,61 +24,63 @@ const Notification = () => {
         // Add the new notification to the top of the list
         setNotifications([newNotification, ...notifications]);
 
+        // Send the notification to the backend
+        sendNotificationToBackend(type);
+
         // Remove the notification after 5 seconds
         setTimeout(() => {
             removeNotification(newNotification.id);
         }, 5000);
     };
 
+    // Send notification to backend
+    const sendNotificationToBackend = (type) => {
+        fetch("http://localhost:5000/api/notifications/send", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ type, message: `New ${type} notification` }),
+        })
+            .then((response) => response.json())
+            .then((data) => console.log("Notification sent:", data))
+            .catch((error) => console.error("Error sending notification:", error));
+    };
+
     // Get content based on notification type
     const getNotificationContent = (type) => {
-        if (type === 'event') {
-            return (
-                <>
-                    <p><strong>New Event Available!</strong></p>
-                    <p>A new event has been created that matches your skills.</p>
-                    <div className="notification-buttons">
-                        <button className="view-details-btn" onClick={() => viewDetails('event')}>View Details</button>
-                    </div>
-                </>
-            );
-        } else if (type === 'update') {
-            return (
-                <>
-                    <p><strong>Event Updated!</strong></p>
-                    <p>The details for an event you're attending have changed.</p>
-                    <div className="notification-buttons">
-                        <button className="view-details-btn" onClick={() => viewDetails('update')}>See Update</button>
-                    </div>
-                </>
-            );
-        } else if (type === 'reminder') {
-            return (
-                <>
-                    <p><strong>Event Reminder!</strong></p>
-                    <p>Don't forget about your upcoming event tomorrow.</p>
-                    <div className="notification-buttons">
-                        <button className="view-details-btn" onClick={() => viewDetails('reminder')}>View Reminder</button>
-                    </div>
-                </>
-            );
+        switch (type) {
+            case 'event':
+                return (
+                    <>
+                        <p><strong>New Event Available!</strong></p>
+                        <p>A new event has been created that matches your skills.</p>
+                    </>
+                );
+            case 'update':
+                return (
+                    <>
+                        <p><strong>Event Updated!</strong></p>
+                        <p>The details for an event you're attending have changed.</p>
+                    </>
+                );
+            case 'reminder':
+                return (
+                    <>
+                        <p><strong>Event Reminder!</strong></p>
+                        <p>Don't forget about your upcoming event tomorrow.</p>
+                    </>
+                );
+            default:
+                return <p>New notification!</p>;
         }
     };
 
     // Remove notification from the list
     const removeNotification = (id) => {
-        setNotifications((prevNotifications) => prevNotifications.filter(notification => notification.id !== id));
-    };
-
-    // Handle redirection (for demo purposes)
-    const viewDetails = (type) => {
-        if (type === 'event') {
-            window.location.href = '/event-details';  // Replace with actual event details page link
-        } else if (type === 'update') {
-            window.location.href = '/event-updates';  // Replace with event updates page
-        } else if (type === 'reminder') {
-            window.location.href = '/event-reminder';  // Replace with event reminder page
-        }
+        setNotifications((prevNotifications) =>
+            prevNotifications.filter((notification) => notification.id !== id)
+        );
     };
 
     return (
