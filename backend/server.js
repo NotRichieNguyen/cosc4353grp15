@@ -138,6 +138,43 @@ app.post("/api/events", (req, res) => {
   }
 });
 
+app.post("/api/volunteers", (req, res) => {
+  const { volunteerName, volunteerSkills, volunteerAvailability } = req.body;
+
+  if (!volunteerName || !volunteerSkills || !volunteerAvailability) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Missing required fields" });
+  }
+
+  const volunteerDate = new Date(volunteerAvailability);
+
+  const matchingEvents = mockEvents.filter((event) => {
+    const eventDate = new Date(event.date);
+
+    const isDateMatch = eventDate.getTime() === volunteerDate.getTime();
+
+    const isSkillMatch = volunteerSkills.includes(
+      event.eventskills.toLowerCase()
+    );
+
+    return isDateMatch && isSkillMatch;
+  });
+
+  if (matchingEvents.length > 0) {
+    return res.status(200).json({
+      success: true,
+      message: "Matching events found!",
+      events: matchingEvents,
+    });
+  } else {
+    return res.status(200).json({
+      success: false,
+      message: "No matching events found",
+    });
+  }
+});
+
 app.listen(5000, () => {
   console.log("Server started at http://localhost:5000");
 });
