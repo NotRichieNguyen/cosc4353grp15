@@ -68,7 +68,29 @@ app.post("/login", (req, res) => {
   }
 });
 
+// profile management
+let mockProfile = [
+  {
+    id: 1,
+    fullname: "John Doe",
+    address1: "1 Volunteer St",
+    city: "Houston",
+    state: "TX",
+    zipcode: "77004",
+    skills: "Teamwork",
+    availability: "10/14/2024, 10/18/2024",
+  },
+];
 
+app.get("/api/profile", (req, res) => {
+  res.json(mockProfile);
+});
+
+app.post("/api/profile", (req, res) => {
+  const { fullname, address1, address2, city, state, zipcode, skills, preferences, availability } = req.body;
+  Object.assign(profileExists, req.body);
+  return res.status(200).json({ message: "Profile updated succesfully", event: profileExists });
+})
 
 // event management
 let mockEvents = [
