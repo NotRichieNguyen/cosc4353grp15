@@ -1,52 +1,56 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./login.css";
 
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    const response = await fetch("http://localhost:5000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (response.ok) {
+      navigate("/profile"); // Redirect to profile on successful login
+    } else {
+      const data = await response.json();
+      setError(data.message);
+    }
+  };
+
   return (
-    <>
-      <div className="login-root">
-        <div className="login-container">
-          <div className="login-header">Sign in</div>
-          <input
-            placeholder="Username"
-            type="text"
-            class="email"
-            className="login-username"
-          />
-          <input
-            placeholder="Password"
-            type="text"
-            class="email"
-            className="login-password"
-          />
-          <div className="login-no-account">
-            <div>Don't Have an Account?</div>
-            <div style={{ textDecoration: "underline", cursor: "pointer" }}>
-              Register here
-            </div>
-          </div>
-          <div className="login-submit">
-            <button class="button">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-6 h-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-                ></path>
-              </svg>
-              <div class="text">Submit</div>
-            </button>
-          </div>
+    <div className="login-root">
+      <div className="login-container">
+        <div className="login-header">Sign in</div>
+        <input
+          placeholder="Username"
+          type="text"
+          className="login-username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          placeholder="Password"
+          type="password"
+          className="login-password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        {error && <div style={{ color: "red" }}>{error}</div>}
+        <div className="login-submit">
+          <button className="button" onClick={handleLogin}>
+            Submit
+          </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
