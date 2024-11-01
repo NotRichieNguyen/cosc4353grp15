@@ -9,9 +9,18 @@ import jwt from "jsonwebtoken";
 import volunteerHistoryRoutes from "./routes/volunteerHistory.routes.js";
 import notificationRoutes from "./routes/notifications.routes.js";
 
+dotenv.config();
 const app = express();
 
-app.use(cors());
+// Connect to MongoDB
+connectDB();
+
+// Middleware
+app.use(cors({
+  origin: ["http://localhost:3000"],
+  methods: ["GET", "POST"],
+  credentials: true,
+}));
 app.use(express.json()); // Parse incoming JSON data
 
 // Register routes
@@ -76,7 +85,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// event management
+// Event management
 let mockEvents = [
   {
     id: 1,
@@ -122,6 +131,7 @@ app.post("/api/events", (req, res) => {
   }
 });
 
+// Volunteer matching
 app.post("/api/volunteers", (req, res) => {
   const { volunteerName, volunteerSkills, volunteerAvailability } = req.body;
 
@@ -159,7 +169,9 @@ app.post("/api/volunteers", (req, res) => {
   }
 });
 
-app.listen(5000, () => {
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
   connectDB();
-  console.log("Server started at http://localhost:5000");
+  console.log(`Server started at http://localhost:${PORT}`);
 });
