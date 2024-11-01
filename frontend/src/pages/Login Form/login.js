@@ -9,21 +9,49 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const response = await fetch("http://localhost:5000/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
+    if (!username || !password) {
+      setError("Both fields are required.");
+      return;
+    }
 
-    if (response.ok) {
-      navigate("/profile"); // Redirect to profile on successful login
-    } else {
+    try {
+      const response = await fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.message);
+        return;
+      }
+
       const data = await response.json();
-      setError(data.message);
+      alert("Login successful!");
+      localStorage.setItem("token", data.token); // Save token in local storage
+      navigate("/"); // Redirect to home after login
+    } catch (error) {
+      setError("An error occurred while logging in.");
     }
   };
+
+  // app.post("/login", async (req, res) => {
+  //   const { username, password } = req.body;
+  //   try {
+  //     const user = await User.findOne({ username, password });
+  //     if (user) {
+  //       res.status(200).json({ message: "Login successful." });
+  //     } else {
+  //       res.status(401).json({ message: "Invalid username or password." });
+  //     }
+  //   } catch (error) {
+  //     console.error("Login error:", error);
+  //     res.status(500).json({ message: "Server error during login." });
+  //   }
+  // });
 
   return (
     <div className="login-root">

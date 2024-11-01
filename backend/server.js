@@ -3,7 +3,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 import User from "./models/user.model.js";
-dotenv.config();
+import bodyParser from "body-parser";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const app = express();
 
@@ -16,43 +18,46 @@ app.use(
 );
 app.use(express.json());
 
-// authentication
-const users = []; // Array to store users
+dotenv.config({ path: "./backend/config/.env" });
 
 // Registration endpoint
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
   const { username, password } = req.body;
-  console.log(`Registering user: ${username}`);
 
-  const userExists = users.find((user) => user.username === username);
+  try {
+    const userExists = await User.findOne({ username });
+    if (userExists) {
+      return res.status(400).json({ message: "Username already exists." });
+    }
 
-  if (userExists) {
-    console.log("User already exists.");
-    return res.status(400).json({ message: "Username already exists." });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({ username, password: hashedPassword });
+    await newUser.save();
+
+    res.status(201).json({ message: "User registered successfully." });
+  } catch (error) {
+    console.error("Registration error:", error);
+    res.status(500).json({ message: "Server error during registration." });
   }
-
-  users.push({ username, password });
-  console.log("User registered successfully.");
-  res.status(201).json({ message: "User registered successfully." });
 });
 
 // Login endpoint
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  console.log(`Logging in user: ${username}`);
 
-  const user = users.find((u) => u.username === username && u.password === password);
-
-  if (user) {
-    console.log("Login successful.");
-    res.status(200).json({ message: "Login successful." });
-  } else {
-    console.log("Invalid credentials.");
-    res.status(401).json({ message: "Invalid username or password." });
+  try {
+    const user = await User.findOne({ username });
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const token = jwt.sign({ id: user._id }, 'your_jwt_secret', { expiresIn: '1h' });
+      res.status(200).json({ message: "Login successful.", token });
+    } else {
+      res.status(401).json({ message: "Invalid username or password." });
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server error during login." });
   }
 });
-
-
 
 // event management
 let mockEvents = [
@@ -101,5 +106,6 @@ app.post("/api/events", (req, res) => {
 });
 
 app.listen(5000, () => {
+  connectDB();
   console.log("Server started at http://localhost:5000");
 });

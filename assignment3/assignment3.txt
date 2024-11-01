@@ -1,0 +1,12 @@
+1. https://github.com/NotRichieNguyen/cosc4353grp15
+
+2. For the backend, we are using Express.js, a framework that streamlines the management
+of requests and responses. It allows for the use of middleware functions to perform
+various tasks, including authentication, logging, and error handling. Additionally,
+Express.js features a straightforward and user-friendly routing system, enabling us
+to define routes for handling different types of HTTP requests effectively.
+
+3. Richie set up the back end for the login and registration system. Danny developed
+logic to display each volunteer's history and send notifcations to users. Wilson 
+created the event management back end along with the volunteer matching system. Lastly,
+Vincent allowed users to manage their profile details including skills and availability.
