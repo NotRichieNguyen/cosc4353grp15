@@ -1,0 +1,21 @@
+1. https://github.com/NotRichieNguyen/cosc4353grp15
+
+2. 
+
+Users:
+
+username: {
+    type: String,
+    required: true,
+    unique: true, 
+    index: true,  
+},
+password: {
+    type: String,
+    required: true,
+},
+
+3. 
+
+4. Richie set up authentication with MongoDB. Wilson connected the database for event management and volunteer matching.
+Danny connected the database for each volunteer's history. Lastly, Vincent connected the database for the user profile maangement.
