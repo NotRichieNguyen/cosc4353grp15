@@ -3,7 +3,6 @@ import "./notification.css";
 
 const Notification = () => {
     const [notifications, setNotifications] = useState([]);
-    let notificationCounter = 0;
 
     // Fetch notifications from backend on load
     useEffect(() => {
@@ -16,7 +15,7 @@ const Notification = () => {
     // Function to show new notification (for demo purposes)
     const showNotification = (type) => {
         const newNotification = {
-            id: notificationCounter++,
+            id: new Date().getTime(), // Unique ID based on timestamp
             type: type,
             content: getNotificationContent(type),
         };
@@ -26,21 +25,16 @@ const Notification = () => {
 
         // Send the notification to the backend
         sendNotificationToBackend(type);
-
-        // Remove the notification after 5 seconds
-        setTimeout(() => {
-            removeNotification(newNotification.id);
-        }, 5000);
     };
 
     // Send notification to backend
     const sendNotificationToBackend = (type) => {
-        fetch("http://localhost:5000/api/notifications/send", {
+        fetch("http://localhost:5000/api/notifications", { // Adjusted endpoint
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ type, message: `New ${type} notification` }),
+            body: JSON.stringify({ title: type, message: `New ${type} notification` }),
         })
             .then((response) => response.json())
             .then((data) => console.log("Notification sent:", data))
@@ -91,8 +85,14 @@ const Notification = () => {
 
             <div id="notification-container">
                 {notifications.map((notification) => (
-                    <div key={notification.id} className="notification show">
-                        {notification.content}
+                    <div key={notification.id || notification._id} className="notification show">
+                        {/* Render based on content if it's newly created, or title/message if from backend */}
+                        {notification.content || (
+                            <>
+                                <p><strong>{notification.title}</strong></p>
+                                <p>{notification.message}</p>
+                            </>
+                        )}
                     </div>
                 ))}
             </div>

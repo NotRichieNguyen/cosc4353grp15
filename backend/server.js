@@ -6,9 +6,18 @@ import User from "./models/user.model.js";
 import volunteerHistoryRoutes from "./routes/volunteerHistory.routes.js";
 import notificationRoutes from "./routes/notifications.routes.js";
 
+dotenv.config();
 const app = express();
 
-app.use(cors());
+// Connect to MongoDB
+connectDB();
+
+// Middleware
+app.use(cors({
+  origin: ["http://localhost:3000"],
+  methods: ["GET", "POST"],
+  credentials: true,
+}));
 app.use(express.json()); // Parse incoming JSON data
 
 // Register routes
@@ -21,18 +30,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: "Server Error" });
 });
 
-dotenv.config();
-
-app.use(
-  cors({
-    origin: ["http://localhost:3000"],
-    methods: ["GET", "POST"],
-    credentials: true,
-  })
-);
-app.use(express.json());
-
-// authentication
+// Mock data and authentication
 const users = []; // Array to store users
 
 // Registration endpoint
@@ -68,7 +66,7 @@ app.post("/login", (req, res) => {
   }
 });
 
-// profile management
+// Profile management
 let mockProfile = [
   {
     id: 1,
@@ -88,11 +86,19 @@ app.get("/api/profile", (req, res) => {
 
 app.post("/api/profile", (req, res) => {
   const { fullname, address1, address2, city, state, zipcode, skills, preferences, availability } = req.body;
-  Object.assign(profileExists, req.body);
-  return res.status(200).json({ message: "Profile updated succesfully", event: profileExists });
-})
+  let profileExists = mockProfile.find(profile => profile.fullname === fullname);
 
-// event management
+  if (profileExists) {
+    Object.assign(profileExists, req.body);
+    return res.status(200).json({ message: "Profile updated successfully", profile: profileExists });
+  } else {
+    const newProfile = { id: mockProfile.length + 1, ...req.body };
+    mockProfile.push(newProfile);
+    return res.status(201).json({ message: "New profile created", profile: newProfile });
+  }
+});
+
+// Event management
 let mockEvents = [
   {
     id: 1,
@@ -138,6 +144,7 @@ app.post("/api/events", (req, res) => {
   }
 });
 
+// Volunteer matching
 app.post("/api/volunteers", (req, res) => {
   const { volunteerName, volunteerSkills, volunteerAvailability } = req.body;
 
@@ -175,6 +182,8 @@ app.post("/api/volunteers", (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log("Server started at http://localhost:5000");
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server started at http://localhost:${PORT}`);
 });
