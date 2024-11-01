@@ -6,8 +6,25 @@ import User from "./models/user.model.js";
 import bodyParser from "body-parser";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import volunteerHistoryRoutes from "./routes/volunteerHistory.routes.js";
+import notificationRoutes from "./routes/notifications.routes.js";
 
 const app = express();
+
+app.use(cors());
+app.use(express.json()); // Parse incoming JSON data
+
+// Register routes
+app.use("/api/volunteer-history", volunteerHistoryRoutes);
+app.use("/api/notifications", notificationRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ success: false, message: "Server Error" });
+});
+
+dotenv.config();
 
 app.use(
   cors({
@@ -102,6 +119,43 @@ app.post("/api/events", (req, res) => {
     return res
       .status(201)
       .json({ message: "New event created", event: newEvent });
+  }
+});
+
+app.post("/api/volunteers", (req, res) => {
+  const { volunteerName, volunteerSkills, volunteerAvailability } = req.body;
+
+  if (!volunteerName || !volunteerSkills || !volunteerAvailability) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Missing required fields" });
+  }
+
+  const volunteerDate = new Date(volunteerAvailability);
+
+  const matchingEvents = mockEvents.filter((event) => {
+    const eventDate = new Date(event.date);
+
+    const isDateMatch = eventDate.getTime() === volunteerDate.getTime();
+
+    const isSkillMatch = volunteerSkills.includes(
+      event.eventskills.toLowerCase()
+    );
+
+    return isDateMatch && isSkillMatch;
+  });
+
+  if (matchingEvents.length > 0) {
+    return res.status(200).json({
+      success: true,
+      message: "Matching events found!",
+      events: matchingEvents,
+    });
+  } else {
+    return res.status(200).json({
+      success: false,
+      message: "No matching events found",
+    });
   }
 });
 

@@ -1,12 +1,58 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { MdEdit } from "react-icons/md";
 import "./profile.css";
 
 const ProfileManagement = () => {
+  const [formData, setFormData] = useState({
+    fullname: "",
+    address1: "",
+    address2: "",
+    city: "",
+    state: "",
+    zipcode: "",
+    skills: "",
+    preferences: "",
+    availability: "",
+  })
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:5000/api/profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fullname: formData.fullname,
+          address1: formData.address1,
+          address2: formData.address2,
+          city: formData.city,
+          state: formData.state,
+          zipcode: formData.zipcode,
+          skills: formData.skills,
+          preferences: formData.preferences,
+          availability: formData.availability,
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        alert(`Error: ${result.error}`);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
   return (
     <div className="profile-management">
       <div className="pm-container">
         <div className="form-container">
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="form-header">
               <h1>User Profile</h1>
             </div>
@@ -24,6 +70,8 @@ const ProfileManagement = () => {
                     placeholder="Full Name"
                     maxlength="50"
                     required
+                    value={formData.fullname}
+                    onChange={handleChange}
                   />
                 </p>
                 <p>
@@ -35,6 +83,8 @@ const ProfileManagement = () => {
                     placeholder="Address 1"
                     maxlength="100"
                     required
+                    value={formData.address1}
+                    onChange={handleChange}
                   />
                 </p>
                 <p>
@@ -45,6 +95,8 @@ const ProfileManagement = () => {
                     id="address2"
                     placeholder="Address 2"
                     maxlength="100"
+                    value={formData.address2}
+                    onChange={handleChange}
                   />
                 </p>
                 <p>
@@ -56,6 +108,8 @@ const ProfileManagement = () => {
                     placeholder="City"
                     maxlength="100"
                     required
+                    value={formData.city}
+                    onChange={handleChange}
                   />
                 </p>
                 <p>
@@ -64,6 +118,8 @@ const ProfileManagement = () => {
                     name="state"
                     id="state"
                     required
+                    value={formData.state}
+                    onChange={handleChange}
                   >
                     <option value="" disabled selected>
                       State
@@ -131,6 +187,8 @@ const ProfileManagement = () => {
                     maxlength="10"
                     pattern="\d{5,5}(-\d{4,4})?"
                     required
+                    value={formData.zipcode}
+                    onChange={handleChange}
                   />
                 </p>
                 <p>
@@ -140,6 +198,8 @@ const ProfileManagement = () => {
                     id="skills"
                     multiple
                     required
+                    value={formData.skills}
+                    onChange={handleChange}
                   >
                     <option value="communication">Communication</option>
                     <option value="leadership">Leadership</option>
@@ -168,25 +228,21 @@ const ProfileManagement = () => {
                     name="preferences"
                     id="preferences"
                     placeholder="Preferences"
+                    value={formData.preferences}
+                    onChange={handleChange}
                   ></textarea>
-                </p>
-                <p>
-                  <input
-                    className="profile-input"
-                    type="date"
-                    name="date-selector"
-                    id="date-selector"
-                  />
                 </p>
                 <p>
                   <textarea
                     className="profile-input"
                     rows="5"
                     cols="50"
-                    name="date-string"
-                    id="date-string"
+                    name="availability"
+                    id="availability"
                     placeholder="Dates Available"
                     required
+                    value={formData.availability}
+                    onChange={handleChange}
                   ></textarea>
                 </p>
                 <div className="profile-submit">
@@ -216,35 +272,5 @@ const ProfileManagement = () => {
     </div>
   );
 };
-/*
-const dateSelector = document.getElementById("date-selector");
-const dateString = document.getElementById("date-string");
 
-dateSelector.addEventListener("change", function () {
-  if (!this.value) {
-    return;
-  }
-
-  const selectedDateParts = this.value.split("-");
-  const selectedDate = new Date(
-    Date.UTC(
-      selectedDateParts[0],
-      selectedDateParts[1] - 1,
-      selectedDateParts[2]
-    )
-  );
-  const formattedDate = `${(selectedDate.getUTCMonth() + 1)
-    .toString()
-    .padStart(2, "0")}/${selectedDate
-    .getUTCDate()
-    .toString()
-    .padStart(2, "0")}/${selectedDate.getUTCFullYear()}`;
-
-  if (dateString.value) {
-    dateString.value += ", " + formattedDate;
-  } else {
-    dateString.value = formattedDate;
-  }
-});
-*/
 export default ProfileManagement;
