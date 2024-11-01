@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const volunteermatchingSchema = new mongoose.Schema({
   volunteername: {
@@ -36,4 +36,4 @@ const VolunteerMatching = mongoose.model(
   volunteermatchingSchema
 );
 
-export default VolunteerMatching;
+module.exports = mongoose.model("volunteerMatching", volunteermatchingSchema);

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const eventManagementSchema = new mongoose.Schema({
   eventname: {
@@ -51,4 +51,4 @@ const EventManagement = mongoose.model(
   eventManagementSchema
 );
 
-export default EventManagement;
+module.exports = mongoose.model("eventManagement", eventManagementSchema);

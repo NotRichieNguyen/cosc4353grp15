@@ -1,13 +1,17 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import { connectDB } from "./config/db.js";
-import User from "./models/user.model.js";
-import bodyParser from "body-parser";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const User = require("./models/user.model.js");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const uri = require("./config/keys").mongoURI;
 const app = express();
+
+mongoose
+  .connect(uri, {})
+  .then(() => console.log("MongoDB successfully connected"))
+  .catch((err) => console.log(err));
 
 app.use(
   cors({
@@ -107,7 +111,6 @@ app.post("/api/events", (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  connectDB();
-  console.log("Server started at http://localhost:5000");
+app.listen(4000, () => {
+  console.log("Server Started on PORT 4000");
 });
