@@ -8,8 +8,8 @@
 }
 
 .vm_container {
-  width: 30%;
-  height: 57%;
+  width: 30vw;
+  height: 70vh;
   border-radius: 10px;
   background-color: #0e0e0ef3;
   box-shadow: 0px 5px 10px 2px grey;

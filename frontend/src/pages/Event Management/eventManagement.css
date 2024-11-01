@@ -9,8 +9,8 @@
 }
 
 .em_container {
-  width: 50%;
-  height: 45%;
+  width: 50vw;
+  height: 55vh;
   background-color: #0e0e0ef3;
   border-radius: 10px;
   box-shadow: 0px 5px 10px 2px grey;
