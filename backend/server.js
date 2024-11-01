@@ -12,8 +12,6 @@ import notificationRoutes from "./routes/notifications.routes.js";
 dotenv.config();
 const app = express();
 
-// Connect to MongoDB
-connectDB();
 
 // Middleware
 app.use(cors({
