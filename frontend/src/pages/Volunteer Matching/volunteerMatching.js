@@ -11,6 +11,7 @@ const VolunteerMatching = () => {
   });
 
   const [matchingEvents, setMatchingEvents] = useState([]);
+  const [showThankYou, setShowThankYou] = useState(false);
 
   const handleCheckboxChange = (e) => {
     const { value, checked } = e.target;
@@ -66,6 +67,11 @@ const VolunteerMatching = () => {
     } catch (error) {
       console.error("Error submitting form:", error);
     }
+  };
+
+  const handleCheckClick = () => {
+    alert("Thank you for registering!");
+    window.location.reload();
   };
 
   return (
@@ -186,7 +192,10 @@ const VolunteerMatching = () => {
                 <strong>{event.eventname}</strong> - {event.eventlocation} -{" "}
                 {new Date(event.date).toLocaleDateString()} -{" "}
                 {event.description}
-                <button className="eventSignUp_button">
+                <button
+                  className="eventSignUp_button"
+                  onClick={handleCheckClick}
+                >
                   <FaCheck />
                 </button>
               </li>
