@@ -10,6 +10,7 @@ import volunteerHistoryRoutes from "./routes/volunteerHistory.routes.js";
 import notificationRoutes from "./routes/notifications.routes.js";
 import EventManagement from "./models/eventmanagement.model.js";
 import VolunteerMatching from "./models/volunteermatching.model.js";
+import ProfileManagement from "./models/profilemanagement.model.js";
 
 dotenv.config();
 const app = express();
@@ -85,6 +86,37 @@ app.post("/login", async (req, res) => {
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Server error during login." });
+  }
+});
+
+// Profile Management
+app.get("/api/profile", async (req, res) => {
+  try {
+    const profiles = await ProfileManagement.find({ });
+    res.json(profiles)
+  }
+  catch (error) {
+    console.error("Profile not found: ", error)
+    res.status(500).json({ message: "Profile not found: ", error })
+  }
+});
+
+app.post("/api/profile", async (req, res) => {
+  const { fullname, address1, address2, city, state, zipcode, skills, preferences, availability } = req.body;
+  try {
+    const profileExists = await ProfileManagement.findOne({ fullname });
+    if (profileExists) {
+      return res.status(200).json({ message: "Profile updated successfully", profile: profileExists });
+    }
+    else {
+      const newProfile = new ProfileManagement({ fullname, address1, address2, city, state, zipcode, skills, preferences, availability });
+      await newProfile.save();
+      return res.status(201).json({ message: "New profile created", profile: newProfile }); 
+    }
+  }
+  catch (error) {
+    console.error("Profile could not be created: ", error)
+    res.status(500).json({ message: "Profile could not be created: ", error })
   }
 });
 
