@@ -93,13 +93,13 @@ const VolunteerMatching = () => {
               <div className="checkboxGroup">
                 <div className="groupone">
                   {[
-                    "communication",
-                    "leadership",
-                    "organization",
-                    "time_management",
-                    "problem_solving",
-                    "teamwork",
-                    "event_planning",
+                    "Communcation",
+                    "Leadership",
+                    "Organization",
+                    "Time Management",
+                    "Problem Solving",
+                    "Teamwork",
+                    "Event Planning",
                   ].map((skill) => (
                     <label key={skill}>
                       <input
@@ -109,22 +109,20 @@ const VolunteerMatching = () => {
                         onChange={handleCheckboxChange}
                         checked={formData.volunteerSkills.includes(skill)}
                       />
-                      {skill
-                        .replace(/_/g, " ")
-                        .replace(/\b\w/g, (c) => c.toUpperCase())}
+                      {skill}
                     </label>
                   ))}
                 </div>
 
                 <div className="grouptwo">
                   {[
-                    "customer_service",
-                    "first_aid",
-                    "fundraising",
+                    "Customer Service",
+                    "First Aid/CPR",
+                    "Fundraising",
                     "marketing",
-                    "budgeting",
-                    "multitasking",
-                    "tech_skills",
+                    "Marketing",
+                    "Multitasking",
+                    "Tech Skills",
                   ].map((skill) => (
                     <label key={skill}>
                       <input
@@ -134,9 +132,7 @@ const VolunteerMatching = () => {
                         onChange={handleCheckboxChange}
                         checked={formData.volunteerSkills.includes(skill)}
                       />
-                      {skill
-                        .replace(/_/g, " ")
-                        .replace(/\b\w/g, (c) => c.toUpperCase())}
+                      {skill}
                     </label>
                   ))}
                 </div>

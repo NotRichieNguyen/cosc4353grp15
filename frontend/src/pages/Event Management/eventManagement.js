@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { MdEdit } from "react-icons/md";
-
 import "./eventManagement.css";
 
 const EventManagement = () => {
@@ -14,6 +13,7 @@ const EventManagement = () => {
   });
 
   const [matchedEvent, setMatchedEvent] = useState(null);
+  const [statusMessage, setStatusMessage] = useState(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,6 +21,8 @@ const EventManagement = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setStatusMessage(null); // Clear previous status messages
+
     try {
       const response = await fetch("http://localhost:5000/api/events", {
         method: "POST",
@@ -42,8 +44,9 @@ const EventManagement = () => {
       if (response.ok) {
         if (result.message === "Event already exists") {
           setMatchedEvent(result.event);
+          setStatusMessage("Event already exists.");
         } else {
-          alert("New event created!");
+          setStatusMessage("New event created successfully!");
           setMatchedEvent(result.event);
         }
 
@@ -56,10 +59,11 @@ const EventManagement = () => {
           eventDescription: "",
         });
       } else {
-        alert(`Error: ${result.error}`);
+        setStatusMessage(`Error: ${result.message}`);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      setStatusMessage("Failed to submit. Please try again.");
     }
   };
 
@@ -101,22 +105,22 @@ const EventManagement = () => {
                 onChange={handleChange}
               >
                 <option value="">Event Skills</option>
-                <option value="communication">Communication</option>
-                <option value="leadership">Leadership</option>
-                <option value="organization">Organization</option>
-                <option value="time_management">Time Management</option>
-                <option value="problem_solving">Problem Solving</option>
-                <option value="teamwork">Teamwork</option>
-                <option value="event_planning">Event Planning</option>
-                <option value="customer_service">Customer Service</option>
-                <option value="first_aidcpr">First Aid/CPR</option>
-                <option value="fundraising">Fundraising</option>
-                <option value="marketing_socialmedia">
+                <option value="Communication">Communication</option>
+                <option value="Leadership">Leadership</option>
+                <option value="Organization">Organization</option>
+                <option value="Time Management">Time Management</option>
+                <option value="Problem Solving">Problem Solving</option>
+                <option value="Teamwork">Teamwork</option>
+                <option value="Event Planning">Event Planning</option>
+                <option value="Customer Service">Customer Service</option>
+                <option value="First Aid/CPR">First Aid/CPR</option>
+                <option value="Fundraising">Fundraising</option>
+                <option value="Marketing/Social Media">
                   Marketing/Social Media
                 </option>
-                <option value="budgeting">Budgeting</option>
-                <option value="multitasking">Multitasking</option>
-                <option value="techskills">Tech Skills</option>
+                <option value="Budgeting">Budgeting</option>
+                <option value="Multitasking">Multitasking</option>
+                <option value="Tech Skills">Tech Skills</option>
               </select>
               <select
                 name="eventUrgency"
@@ -126,9 +130,9 @@ const EventManagement = () => {
                 onChange={handleChange}
               >
                 <option value="">Urgency</option>
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
               </select>
               <input
                 type="date"
