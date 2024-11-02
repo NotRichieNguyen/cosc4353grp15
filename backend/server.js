@@ -130,6 +130,28 @@ app.post("/api/events", async (req, res) => {
   }
 });
 
+app.post("/api/events/update/:id", async (req, res) => {
+  const { eventName } = req.params;
+  const updateData = req.body;
+
+  try {
+    const updatedEvent = await EventManagement.findByIdAndUpdate(
+      eventName,
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedEvent) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    res.json({ message: "Event updated successfully", updatedEvent });
+  } catch (error) {
+    console.error("Error updating event:", error);
+    res.status(500).json({ message: "Error updating event", error });
+  }
+});
+
 app.post("/api/volunteers", async (req, res) => {
   const { volunteerName, volunteerSkills, volunteerAvailability } = req.body;
 
