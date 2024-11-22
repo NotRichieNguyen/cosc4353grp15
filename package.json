@@ -18,7 +18,10 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^6.13.4"
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
+    "mongoose": "^6.13.4",
+    "react-csv": "^2.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

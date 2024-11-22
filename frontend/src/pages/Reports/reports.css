@@ -2,7 +2,7 @@
   font-family: Helvetica;
   display: flex;
   width: 1920px;
-  height: 768px;
+  height: 1000px;
 
   display: flex;
   align-items: center;
@@ -11,7 +11,7 @@
 
 .reportsContainer {
   width: 50vw;
-  height: 70vh;
+  height: 87vh;
   border-radius: 10px;
   background-color: #0e0e0ef3;
   box-shadow: 0px 5px 10px 2px grey;
@@ -122,7 +122,7 @@
 }
 
 .eventReportsContainer {
-  height: 48vh;
+  height: 65vh;
   padding: 2vw;
   width: 46vw;
 
@@ -139,4 +139,34 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.reportContent {
+  width: 50vw;
+  height: 5vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.volunteerCSV {
+  margin-right: 25px;
+  cursor: pointer;
+}
+
+.volunteerPDF {
+  margin-left: 25px;
+  cursor: pointer;
+}
+
+.eventsCSV {
+  margin-right: 25px;
+  cursor: pointer;
+}
+
+.eventsPDF {
+  margin-left: 25px;
+  cursor: pointer;
 }
