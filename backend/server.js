@@ -28,7 +28,7 @@ app.use(
 app.use(express.json()); // Parse incoming JSON data
 // Middleware to verify JWT and extract user ID
 function authenticateJWT(req, res, next) {
-  const token = req.header("Authorization")?.split(" ")[1]; // Extract token from Authorization header
+  const token = req.header("Authorization")?.split(" ")[1];
   if (!token) {
     return res.status(403).json({ message: "No token provided" });
   }
@@ -37,7 +37,7 @@ function authenticateJWT(req, res, next) {
     if (err) {
       return res.status(403).json({ message: "Invalid token" });
     }
-    req.user = user; // Store the decoded user info in the request object
+    req.user = user;
     next();
   });
 }
