@@ -4,6 +4,8 @@ import "./volunteerMatching.css";
 import "../Event Management/eventManagement.css";
 
 const VolunteerMatching = () => {
+  const userID = localStorage.getItem("id");
+
   const [formData, setFormData] = useState({
     volunteerName: "",
     volunteerSkills: [],
@@ -69,9 +71,32 @@ const VolunteerMatching = () => {
     }
   };
 
-  const handleCheckClick = () => {
-    alert("Thank you for registering!");
-    window.location.reload();
+  const handleCheckClick = async (eventId) => {
+    const userId = localStorage.getItem("id");
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/volunteer-matching",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId, eventId }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("Thank you for registering!");
+        window.location.reload();
+      } else {
+        alert(`Error: ${result.message}`);
+      }
+    } catch (error) {
+      console.error("Error registering for event:", error);
+      alert("Failed to register. Please try again.");
+    }
   };
 
   return (
@@ -125,8 +150,8 @@ const VolunteerMatching = () => {
                     "Customer Service",
                     "First Aid/CPR",
                     "Fundraising",
-                    "marketing",
-                    "Marketing",
+                    "Marketing/Social Media",
+                    "Budgeting",
                     "Multitasking",
                     "Tech Skills",
                   ].map((skill) => (
@@ -194,7 +219,7 @@ const VolunteerMatching = () => {
                 {event.description}
                 <button
                   className="eventSignUp_button"
-                  onClick={handleCheckClick}
+                  onClick={() => handleCheckClick(event._id)}
                 >
                   <FaCheck />
                 </button>

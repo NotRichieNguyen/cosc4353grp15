@@ -30,11 +30,12 @@ const Login = () => {
       }
 
       const data = await response.json();
-      alert("Login successful!");
-      localStorage.setItem("token", data.token); // Save token in local storage
-      console.clear();
-      console.log(username);
-      navigate("/profile"); // Redirect to home after login
+      alert(`Login successful!`);
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("id", data.id);
+      localStorage.setItem("admin", data.admin);
+      navigate("/profile");
+      window.location.reload();
     } catch (error) {
       setError("An error occurred while logging in.");
     }

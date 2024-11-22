@@ -80,12 +80,12 @@ const EventManagement = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     setStatusMessage(null);
-
+    console.log(editFormData);
     try {
       const response = await fetch(
-        `http://localhost:5000/api/events/update/${matchedEvent.eventName}`,
+        `http://localhost:5000/api/events/update/${matchedEvent.eventname}`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
@@ -94,7 +94,7 @@ const EventManagement = () => {
       );
 
       const result = await response.json();
-
+      console.log(result);
       if (response.ok) {
         setMatchedEvent(result.updatedEvent);
         setIsEditing(false);
@@ -104,7 +104,7 @@ const EventManagement = () => {
       }
     } catch (error) {
       console.error("Error updating event:", error);
-      setStatusMessage("Failed to update. Please try again.");
+      setStatusMessage("Failed to update event. Please try again.");
     }
   };
 
@@ -263,8 +263,8 @@ const EventManagement = () => {
               <input
                 className="eventDate"
                 name="Event Date"
-                type="date"
-                value={matchedEvent.date}
+                type="text"
+                value={matchedEvent.date.slice(0, 10)}
                 readonly
               />
             </div>
@@ -299,43 +299,72 @@ const EventManagement = () => {
               <div className="eventDetails">
                 <input
                   className="eventLocation"
-                  name="Event Location"
+                  name="eventlocation"
+                  id="eventlocation"
                   type="text"
                   onChange={handleEditChange}
-                  value={editFormData.eventLocation || ""}
+                  value={editFormData.eventLocation}
                 />
-                <input
+                <select
                   className="eventLocation"
-                  name="Event Skills"
+                  name="eventskills"
+                  id="eventskills"
                   type="text"
                   onChange={handleEditChange}
-                  value={editFormData.eventskills || ""}
-                />
-                <input
+                  value={editFormData.eventskills}
+                >
+                  <option value="">Event Skills</option>
+                  <option value="Communication">Communication</option>
+                  <option value="Leadership">Leadership</option>
+                  <option value="Organization">Organization</option>
+                  <option value="Time Management">Time Management</option>
+                  <option value="Problem Solving">Problem Solving</option>
+                  <option value="Teamwork">Teamwork</option>
+                  <option value="Event Planning">Event Planning</option>
+                  <option value="Customer Service">Customer Service</option>
+                  <option value="First Aid/CPR">First Aid/CPR</option>
+                  <option value="Fundraising">Fundraising</option>
+                  <option value="Marketing/Social Media">
+                    Marketing/Social Media
+                  </option>
+                  <option value="Budgeting">Budgeting</option>
+                  <option value="Multitasking">Multitasking</option>
+                  <option value="Tech Skills">Tech Skills</option>
+                </select>
+                <select
                   className="eventLocation"
-                  name="Event Urgency"
+                  name="urgency"
+                  id="urgency"
                   type="text"
                   onChange={handleEditChange}
-                  value={editFormData.eventUrgency || ""}
-                />
+                  value={editFormData.eventUrgency}
+                >
+                  <option value="">Urgency</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
+
                 <input
                   className="eventDate"
-                  name="Event Date"
+                  name="date"
+                  id="date"
                   type="date"
                   onChange={handleEditChange}
-                  value={editFormData.eventDate || ""}
+                  value={editFormData.eventDate}
                 />
               </div>
 
               <div className="eventDescription">
                 <textarea
                   className="descriptionBox"
-                  name="Event Description"
+                  name="description"
+                  id="description"
                   placeholder="Event Description"
                   cols="30"
                   rows="10"
                   onChange={handleEditChange}
-                  value={editFormData.description || ""}
+                  value={editFormData.description}
                 />
               </div>
               <div className="editButtons">
