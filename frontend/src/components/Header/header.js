@@ -50,6 +50,7 @@ const Header = () => {
             {isLoggedIn && isAdmin && (
               <>
                 <Link to="/event-matching">Event Management </Link>
+                <Link to="/profile"> Profile </Link>
                 <Link to="/reports"> Reports </Link>
                 <Link
                   to="/login"
