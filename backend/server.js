@@ -11,10 +11,10 @@ import notificationRoutes from "./routes/notifications.routes.js";
 import EventManagement from "./models/eventmanagement.model.js";
 import VolunteerMatching from "./models/volunteermatching.model.js";
 import ProfileManagement from "./models/profilemanagement.model.js";
-import crypto from 'crypto';
+import crypto from "crypto";
 // const jwtSecret = crypto.randomBytes(32).toString("hex");
 // console.log('jwtsecret:', jwtSecret);
-dotenv.config();
+dotenv.config({ path: "./backend/config/.env" });
 const app = express();
 
 // Middleware
@@ -28,7 +28,7 @@ app.use(
 app.use(express.json()); // Parse incoming JSON data
 // Middleware to verify JWT and extract user ID
 function authenticateJWT(req, res, next) {
-  const token = req.header('Authorization')?.split(' ')[1]; // Extract token from Authorization header
+  const token = req.header("Authorization")?.split(" ")[1]; // Extract token from Authorization header
   if (!token) {
     return res.status(403).json({ message: "No token provided" });
   }
@@ -41,7 +41,6 @@ function authenticateJWT(req, res, next) {
     next();
   });
 }
-
 
 // Register routes
 app.use("/api/volunteer-history", volunteerHistoryRoutes);
@@ -94,7 +93,9 @@ app.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ username });
     if (user && (await bcrypt.compare(password, user.password))) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "24h",
+      });
 
       res.status(200).json({ message: "Login successful.", token });
     } else {
@@ -106,14 +107,14 @@ app.post("/login", async (req, res) => {
   }
 });
 
-console.log('proces.env.JWT_SECRET:', process.env.JWT_SECRET);
+console.log("proces.env.JWT_SECRET:", process.env.JWT_SECRET);
 
 // Profile Management
 app.get("/api/profile", authenticateJWT, async (req, res) => {
   try {
     const userId = req.user.id; // Get the user ID from the JWT token
     const profile = await ProfileManagement.findOne({ user: userId });
-    console.log('userID: ', userID);
+    console.log("userID: ", userID);
     if (!profile) {
       return res.status(404).json({ message: "Profile not found" });
     }
@@ -127,8 +128,18 @@ app.get("/api/profile", authenticateJWT, async (req, res) => {
 
 // Create or update the user's profile
 app.post("/api/profile", authenticateJWT, async (req, res) => {
-  const { fullname, address1, address2, city, state, zipcode, skills, preferences, availability } = req.body;
-  
+  const {
+    fullname,
+    address1,
+    address2,
+    city,
+    state,
+    zipcode,
+    skills,
+    preferences,
+    availability,
+  } = req.body;
+
   try {
     const userId = req.user.id; // Get the user ID from the JWT token
 
@@ -148,7 +159,9 @@ app.post("/api/profile", authenticateJWT, async (req, res) => {
       profile.availability = availability || profile.availability;
 
       await profile.save();
-      return res.status(200).json({ message: "Profile updated successfully", profile });
+      return res
+        .status(200)
+        .json({ message: "Profile updated successfully", profile });
     } else {
       // Create a new profile for the user
       const newProfile = new ProfileManagement({
@@ -161,18 +174,19 @@ app.post("/api/profile", authenticateJWT, async (req, res) => {
         zipcode,
         skills,
         preferences,
-        availability
+        availability,
       });
 
       await newProfile.save();
-      return res.status(201).json({ message: "Profile created successfully", profile: newProfile });
+      return res
+        .status(201)
+        .json({ message: "Profile created successfully", profile: newProfile });
     }
   } catch (error) {
     console.error("Error creating or updating profile:", error);
     res.status(500).json({ message: "Error creating or updating profile" });
   }
 });
-
 
 // Event management
 app.get("/api/events", async (req, res) => {

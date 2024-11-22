@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import React, { useState } from "react";
 import Header from "./components/Header/header";
-import Sidebar from "./components/Sidebar/sidebar";
-import Home from "./pages/home";
+import Home from "./pages/Home/home";
+import Footer from "./components/Footer/footer";
 import Login from "./pages/Login Form/login";
 import Register from "./pages/Registration Form/register";
 import ProfileManagement from "./pages/Profile Management/profile";
@@ -36,12 +36,16 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login users={users} />} />
-        <Route path="/register" element={<Register onRegister={handleRegister} />} />
+        <Route
+          path="/register"
+          element={<Register onRegister={handleRegister} />}
+        />
         <Route path="/profile" element={<ProfileManagement />} />
         <Route path="/event-matching" element={<EventManagement />} />
         <Route path="/volunteer-matching" element={<VolunteerMatching />} />
         <Route path="/volunteer-history" element={<VolunteerHistory />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }

@@ -4,13 +4,13 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 100vw;
-  height: 90vh;
+  width: 1920px;
+  height: 768px;
 }
 
 .em_container {
-  width: 50%;
-  height: 45%;
+  width: 50vw;
+  height: 42vh;
   background-color: #0e0e0ef3;
   border-radius: 10px;
   box-shadow: 0px 5px 10px 2px grey;
