@@ -32,7 +32,7 @@ const Login = () => {
       const data = await response.json();
       alert("Login successful!");
       localStorage.setItem("token", data.token); // Save token in local storage
-      navigate("/"); // Redirect to home after login
+      navigate("/profile"); // Redirect to home after login
     } catch (error) {
       setError("An error occurred while logging in.");
     }

@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const profileManagementSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Referencing the User model
+    required: true,
+  },
   fullname: {
     type: String,
     required: true,
@@ -86,7 +91,7 @@ const profileManagementSchema = new mongoose.Schema({
   },
   skills: {
     type: String,
-    required: true,
+    required: false,
     enum: [
       "Communication",
       "Leadership",
