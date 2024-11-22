@@ -4,6 +4,7 @@ import Notification from "../models/notifications.model.js"; // Mock the Notific
 import VolunteerHistory from "../models/volunteerHistory.model.js"; // Mock the VolunteerHistory model
 import User from "../models/user.model.js"; // Mock the User model
 import bcrypt from "bcrypt";
+import ProfileManagement from "../models/profilemanagement.model.js"; // Mock the ProfileManagement model
 
 describe("Server Tests", () => {
   describe("GET /api/events", () => {
@@ -91,6 +92,119 @@ describe("Server Tests", () => {
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(false);
       expect(response.body.message).toBe("No matching events found");
+    });
+  });
+});
+
+jest.mock("../models/profileManagement.model.js"); // Mock ProfileManagement
+
+describe("Profile Management Endpoints", () => {
+  afterEach(() => {
+    jest.clearAllMocks(); // Reset mocks after each test
+  });
+
+  describe("GET /api/profile", () => {
+    it("should return all profiles", async () => {
+      const mockProfiles = [
+        {
+          _id: "1",
+          fullname: "John Doe",
+          address1: "123 Main St",
+          address2: "",
+          city: "Houston",
+          state: "TX",
+          zipcode: "77001",
+          skills: ["Teamwork", "Leadership"],
+          preferences: ["Cleanup"],
+          availability: "Weekends",
+        },
+        {
+          _id: "2",
+          fullname: "Jane Smith",
+          address1: "456 Elm St",
+          address2: "Apt 4",
+          city: "Dallas",
+          state: "TX",
+          zipcode: "75201",
+          skills: ["Cooking"],
+          preferences: ["Food Drive"],
+          availability: "Weekdays",
+        },
+      ];
+
+      ProfileManagement.find.mockResolvedValue(mockProfiles);
+
+      const response = await request(app).get("/api/profile");
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(mockProfiles);
+      expect(ProfileManagement.find).toHaveBeenCalledWith({});
+    });
+
+    it("should handle errors when fetching profiles", async () => {
+      ProfileManagement.find.mockRejectedValue(new Error("Database error"));
+
+      const response = await request(app).get("/api/profile");
+
+      expect(response.status).toBe(500);
+      expect(response.body.message).toBe("Profile not found: ");
+      expect(ProfileManagement.find).toHaveBeenCalledWith({});
+    });
+  });
+
+  describe("POST /api/profile", () => {
+    const newProfile = {
+      fullname: "John Doe",
+      address1: "123 Main St",
+      address2: "",
+      city: "Houston",
+      state: "TX",
+      zipcode: "77001",
+      skills: ["Teamwork", "Leadership"],
+      preferences: ["Cleanup"],
+      availability: "Weekends",
+    };
+
+    it("should create a new profile if one does not exist", async () => {
+      ProfileManagement.findOne.mockResolvedValue(null); // No existing profile
+      ProfileManagement.prototype.save = jest.fn().mockResolvedValue({
+        _id: "1",
+        ...newProfile,
+      });
+
+      const response = await request(app).post("/api/profile").send(newProfile);
+
+      expect(response.status).toBe(201);
+      expect(response.body.message).toBe("New profile created");
+      expect(response.body.profile).toMatchObject(newProfile);
+      expect(ProfileManagement.findOne).toHaveBeenCalledWith({ fullname: newProfile.fullname });
+      expect(ProfileManagement.prototype.save).toHaveBeenCalledTimes(1);
+    });
+
+    it("should update the profile if it already exists", async () => {
+      ProfileManagement.findOne.mockResolvedValue({
+        _id: "1",
+        ...newProfile,
+      });
+
+      const response = await request(app).post("/api/profile").send(newProfile);
+
+      expect(response.status).toBe(200);
+      expect(response.body.message).toBe("Profile updated successfully");
+      expect(response.body.profile).toMatchObject(newProfile);
+      expect(ProfileManagement.findOne).toHaveBeenCalledWith({ fullname: newProfile.fullname });
+      expect(ProfileManagement.prototype.save).not.toHaveBeenCalled(); // No save needed for updates
+    });
+
+    it("should handle errors during profile creation or update", async () => {
+      ProfileManagement.findOne.mockRejectedValue(new Error("Database error"));
+
+      const response = await request(app).post("/api/profile").send(newProfile);
+
+      expect(response.status).toBe(500);
+      expect(response.body.message).toBe("Profile could not be created: ");
+      expect(ProfileManagement.findOne).toHaveBeenCalledWith({ fullname: newProfile.fullname });
+      expect(ProfileManagement.prototype.save).not.toHaveBeenCalled();
     });
   });
 });

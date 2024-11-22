@@ -8,18 +8,40 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import volunteerHistoryRoutes from "./routes/volunteerHistory.routes.js";
 import notificationRoutes from "./routes/notifications.routes.js";
-
+import EventManagement from "./models/eventmanagement.model.js";
+import VolunteerMatching from "./models/volunteermatching.model.js";
+import ProfileManagement from "./models/profilemanagement.model.js";
+import crypto from 'crypto';
+// const jwtSecret = crypto.randomBytes(32).toString("hex");
+// console.log('jwtsecret:', jwtSecret);
 dotenv.config();
 const app = express();
 
-
 // Middleware
-app.use(cors({
-  origin: ["http://localhost:3000"],
-  methods: ["GET", "POST"],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
 app.use(express.json()); // Parse incoming JSON data
+// Middleware to verify JWT and extract user ID
+function authenticateJWT(req, res, next) {
+  const token = req.header('Authorization')?.split(' ')[1]; // Extract token from Authorization header
+  if (!token) {
+    return res.status(403).json({ message: "No token provided" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid token" });
+    }
+    req.user = user; // Store the decoded user info in the request object
+    next();
+  });
+}
+
 
 // Register routes
 app.use("/api/volunteer-history", volunteerHistoryRoutes);
@@ -72,7 +94,8 @@ app.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ username });
     if (user && (await bcrypt.compare(password, user.password))) {
-      const token = jwt.sign({ id: user._id }, 'your_jwt_secret', { expiresIn: '1h' });
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
+
       res.status(200).json({ message: "Login successful.", token });
     } else {
       res.status(401).json({ message: "Invalid username or password." });
@@ -83,54 +106,139 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// Event management
-let mockEvents = [
-  {
-    id: 1,
-    eventname: "Community Cleanup",
-    eventlocation: "Park",
-    eventskills: "Teamwork",
-    urgency: "High",
-    date: "2024-11-01",
-    description: "Help clean the park.",
-  },
-  {
-    id: 2,
-    eventname: "Charity Run",
-    eventlocation: "City Center",
-    eventskills: "Leadership",
-    urgency: "Medium",
-    date: "2024-12-05",
-    description: "Lead a charity 5K run.",
-  },
-];
+console.log('proces.env.JWT_SECRET:', process.env.JWT_SECRET);
 
-app.get("/api/events", (req, res) => {
-  res.json(mockEvents);
-});
+// Profile Management
+app.get("/api/profile", authenticateJWT, async (req, res) => {
+  try {
+    const userId = req.user.id; // Get the user ID from the JWT token
+    const profile = await ProfileManagement.findOne({ user: userId });
+    console.log('userID: ', userID);
+    if (!profile) {
+      return res.status(404).json({ message: "Profile not found" });
+    }
 
-app.post("/api/events", (req, res) => {
-  const { eventname } = req.body;
-
-  const existingEvent = mockEvents.find(
-    (event) => event.eventname === eventname
-  );
-
-  if (existingEvent) {
-    return res
-      .status(200)
-      .json({ message: "Event already exists", event: existingEvent });
-  } else {
-    const newEvent = { id: mockEvents.length + 1, ...req.body };
-    mockEvents.push(newEvent);
-    return res
-      .status(201)
-      .json({ message: "New event created", event: newEvent });
+    res.json(profile);
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    res.status(500).json({ message: "Server error while fetching profile" });
   }
 });
 
-// Volunteer matching
-app.post("/api/volunteers", (req, res) => {
+// Create or update the user's profile
+app.post("/api/profile", authenticateJWT, async (req, res) => {
+  const { fullname, address1, address2, city, state, zipcode, skills, preferences, availability } = req.body;
+  
+  try {
+    const userId = req.user.id; // Get the user ID from the JWT token
+
+    // Check if the user already has a profile
+    let profile = await ProfileManagement.findOne({ user: userId });
+
+    if (profile) {
+      // Update the existing profile
+      profile.fullname = fullname || profile.fullname;
+      profile.address1 = address1 || profile.address1;
+      profile.address2 = address2 || profile.address2;
+      profile.city = city || profile.city;
+      profile.state = state || profile.state;
+      profile.zipcode = zipcode || profile.zipcode;
+      profile.skills = skills || profile.skills;
+      profile.preferences = preferences || profile.preferences;
+      profile.availability = availability || profile.availability;
+
+      await profile.save();
+      return res.status(200).json({ message: "Profile updated successfully", profile });
+    } else {
+      // Create a new profile for the user
+      const newProfile = new ProfileManagement({
+        user: userId, // Link the profile to the user
+        fullname,
+        address1,
+        address2,
+        city,
+        state,
+        zipcode,
+        skills,
+        preferences,
+        availability
+      });
+
+      await newProfile.save();
+      return res.status(201).json({ message: "Profile created successfully", profile: newProfile });
+    }
+  } catch (error) {
+    console.error("Error creating or updating profile:", error);
+    res.status(500).json({ message: "Error creating or updating profile" });
+  }
+});
+
+
+// Event management
+app.get("/api/events", async (req, res) => {
+  try {
+    const events = await EventManagement.find({});
+    res.json(events);
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    res.status(500).json({ message: "Error fetching events", error });
+  }
+});
+
+app.post("/api/events", async (req, res) => {
+  const { eventname, eventlocation, eventskills, urgency, date, description } =
+    req.body;
+
+  try {
+    const existingEvent = await EventManagement.findOne({ eventname });
+
+    if (existingEvent) {
+      return res
+        .status(200)
+        .json({ message: "Event already exists", event: existingEvent });
+    } else {
+      const newEvent = new EventManagement({
+        eventname,
+        eventlocation,
+        eventskills,
+        urgency,
+        date,
+        description,
+      });
+      await newEvent.save();
+      return res
+        .status(201)
+        .json({ message: "New event created", event: newEvent });
+    }
+  } catch (error) {
+    console.error("Error creating event:", error);
+    res.status(500).json({ message: "Error creating event", error });
+  }
+});
+
+app.post("/api/events/update/:id", async (req, res) => {
+  const { eventName } = req.params;
+  const updateData = req.body;
+
+  try {
+    const updatedEvent = await EventManagement.findByIdAndUpdate(
+      eventName,
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedEvent) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    res.json({ message: "Event updated successfully", updatedEvent });
+  } catch (error) {
+    console.error("Error updating event:", error);
+    res.status(500).json({ message: "Error updating event", error });
+  }
+});
+
+app.post("/api/volunteers", async (req, res) => {
   const { volunteerName, volunteerSkills, volunteerAvailability } = req.body;
 
   if (!volunteerName || !volunteerSkills || !volunteerAvailability) {
@@ -141,29 +249,27 @@ app.post("/api/volunteers", (req, res) => {
 
   const volunteerDate = new Date(volunteerAvailability);
 
-  const matchingEvents = mockEvents.filter((event) => {
-    const eventDate = new Date(event.date);
-
-    const isDateMatch = eventDate.getTime() === volunteerDate.getTime();
-
-    const isSkillMatch = volunteerSkills.includes(
-      event.eventskills.toLowerCase()
-    );
-
-    return isDateMatch && isSkillMatch;
-  });
-
-  if (matchingEvents.length > 0) {
-    return res.status(200).json({
-      success: true,
-      message: "Matching events found!",
-      events: matchingEvents,
+  try {
+    const matchingEvents = await EventManagement.find({
+      date: volunteerDate,
+      eventskills: { $in: volunteerSkills },
     });
-  } else {
-    return res.status(200).json({
-      success: false,
-      message: "No matching events found",
-    });
+
+    if (matchingEvents.length > 0) {
+      return res.status(200).json({
+        success: true,
+        message: "Matching events found!",
+        events: matchingEvents,
+      });
+    } else {
+      return res.status(200).json({
+        success: false,
+        message: "No matching events found",
+      });
+    }
+  } catch (error) {
+    console.error("Error finding matching events:", error);
+    res.status(500).json({ message: "Error finding matching events", error });
   }
 });
 
