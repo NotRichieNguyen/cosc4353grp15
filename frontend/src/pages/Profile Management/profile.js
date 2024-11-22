@@ -10,13 +10,19 @@ const ProfileManagement = () => {
     city: "",
     state: "",
     zipcode: "",
-    skills: "",
+    skills: [],
     preferences: "",
     availability: "",
   })
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, selectedOptions } = e.target;
+    if (type === "select-multiple") {
+      const selectedValues = Array.from(selectedOptions, (option) => option.value);
+      setFormData({ ...formData, [name]: selectedValues });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
