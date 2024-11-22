@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { MdEdit } from "react-icons/md";
+import React, { useState } from "react";
 import "./profile.css";
 
 const ProfileManagement = () => {
@@ -16,13 +15,7 @@ const ProfileManagement = () => {
   })
 
   const handleChange = (e) => {
-    const { name, value, type, selectedOptions } = e.target;
-    if (type === "select-multiple") {
-      const selectedValues = Array.from(selectedOptions, (option) => option.value);
-      setFormData({ ...formData, [name]: selectedValues });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -202,7 +195,6 @@ const ProfileManagement = () => {
                     className="profile-input"
                     name="skills"
                     id="skills"
-                    multiple
                     required
                     value={formData.skills}
                     onChange={handleChange}
@@ -238,17 +230,19 @@ const ProfileManagement = () => {
                   ></textarea>
                 </p>
                 <p>
-                  <textarea
+                  <input
+                    type="text"
                     className="profile-input"
                     rows="5"
                     cols="50"
                     name="availability"
                     id="availability"
                     placeholder="Dates Available"
+                    pattern="(\s*(0?[1-9]|1[0-2])\/(0?[1-9]|[12][0-9]|3[01])\/\d{4}\s*,?\s*)+"
                     required
                     value={formData.availability}
                     onChange={handleChange}
-                  ></textarea>
+                  />
                 </p>
                 <div className="profile-submit">
                   <button className="button">
