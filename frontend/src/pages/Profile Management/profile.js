@@ -199,6 +199,9 @@ const ProfileManagement = () => {
                     value={formData.skills}
                     onChange={handleChange}
                   >
+                    <option value="" disabled selected>
+                      Skills
+                    </option>
                     <option value="Communication">Communication</option>
                     <option value="Leadership">Leadership</option>
                     <option value="Organization">Organization</option>
