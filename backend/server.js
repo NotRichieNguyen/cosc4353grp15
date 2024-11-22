@@ -117,45 +117,39 @@ app.post("/login", async (req, res) => {
 
 console.log("proces.env.JWT_SECRET:", process.env.JWT_SECRET);
 
-// Profile Management
-app.get("/api/profile", async (req, res) => {
-  try {
-    const userId = req.user.id; // Get the user ID from the JWT token
-    const profile = await ProfileManagement.findOne({ user: userId });
-    console.log("userID: ", userID);
-    if (!profile) {
-      return res.status(404).json({ message: "Profile not found" });
-    }
+//Get Profile
+app.get("/api/profile", authenticateJWT, async (req, res) => {
+  const userId = req.user.id; // Extracted from the JWT
 
-    res.json(profile);
+  try {
+    const profile = await ProfileManagement.findOne({ user: userId });
+    if (!profile) {
+      return res.status(404).json({
+        message: "Profile not found.",
+      });
+    }
+    return res.status(200).json(profile);
   } catch (error) {
     console.error("Error fetching profile:", error);
-    res.status(500).json({ message: "Server error while fetching profile" });
+    return res.status(500).json({
+      message: "Error fetching profile.",
+      error: error.message,
+    });
   }
 });
 
-// Create or update the user's profile
+// Profile Management
 app.post("/api/profile", authenticateJWT, async (req, res) => {
-  const {
-    fullname,
-    address1,
-    address2,
-    city,
-    state,
-    zipcode,
-    skills,
-    preferences,
-    availability,
-  } = req.body;
+  const userId = req.user.id; // Extracted from the JWT
+  const { fullname, address1, address2, city, state, zipcode, skills } =
+    req.body;
 
   try {
-    const userId = req.user.id; // Get the user ID from the JWT token
-
-    // Check if the user already has a profile
+    // Check if the profile already exists
     let profile = await ProfileManagement.findOne({ user: userId });
 
     if (profile) {
-      // Update the existing profile
+      // Update existing profile
       profile.fullname = fullname || profile.fullname;
       profile.address1 = address1 || profile.address1;
       profile.address2 = address2 || profile.address2;
@@ -163,17 +157,16 @@ app.post("/api/profile", authenticateJWT, async (req, res) => {
       profile.state = state || profile.state;
       profile.zipcode = zipcode || profile.zipcode;
       profile.skills = skills || profile.skills;
-      profile.preferences = preferences || profile.preferences;
-      profile.availability = availability || profile.availability;
 
       await profile.save();
-      return res
-        .status(200)
-        .json({ message: "Profile updated successfully", profile });
+      return res.status(200).json({
+        message: "Profile updated successfully",
+        profile,
+      });
     } else {
-      // Create a new profile for the user
+      // Create a new profile
       const newProfile = new ProfileManagement({
-        user: userId, // Link the profile to the user
+        user: userId,
         fullname,
         address1,
         address2,
@@ -181,22 +174,42 @@ app.post("/api/profile", authenticateJWT, async (req, res) => {
         state,
         zipcode,
         skills,
-        preferences,
-        availability,
       });
 
       await newProfile.save();
-      return res
-        .status(201)
-        .json({ message: "Profile created successfully", profile: newProfile });
+      return res.status(201).json({
+        message: "Profile created successfully",
+        profile: newProfile,
+      });
     }
   } catch (error) {
-    console.error("Error creating or updating profile:", error);
-    res
-      .status(500)
-      .json({ message: "Error creating or updating profile", error });
+    console.error("Error creating/updating profile:", error);
+    return res.status(500).json({
+      message: "Error creating/updating profile",
+      error: error.message,
+    });
   }
 });
+
+//Your Event Count
+app.get("/api/user-events-count", authenticateJWT, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const totalEvents = await VolunteerMatching.countDocuments({
+      user: userId,
+    });
+
+    res.status(200).json({ totalEvents });
+  } catch (error) {
+    console.error("Error fetching user events count:", error);
+    res
+      .status(500)
+      .json({ message: "Server error while fetching event count." });
+  }
+});
+
+//Today Event Count
 
 // Event management
 app.get("/api/events", async (req, res) => {

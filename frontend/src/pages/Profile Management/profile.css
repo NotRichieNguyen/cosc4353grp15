@@ -1,71 +1,445 @@
-.form-header {
-  text-align: center;
-}
-
-.profile-management {
+.profileManagement {
   font-family: Helvetica;
   display: flex;
+  align-items: center;
   justify-content: center;
   width: 1920px;
   height: 768px;
 }
 
-.container {
-  text-align: center;
-  margin: 5px;
-  font-size: 12px;
-  background-color: white;
-}
-
-.profile-title {
-  font-size: 14px;
-  font-weight: bold;
-  color: white;
-  background-color: transparent;
-  padding: 15px;
-  border: none;
-}
-
-.profile-details {
-  border: 1px solid black;
+.profileContainer {
+  width: 50vw;
+  height: 70vh;
   border-radius: 10px;
-  background-color: black;
-}
+  background-color: #0e0e0ef3;
+  box-shadow: 0px 5px 10px 2px grey;
 
-.profile-input {
-  margin: auto;
-  font-family: Helvetica;
-  background-color: transparent;
-  color: white;
-  border: none;
-  border-bottom: 2px solid white;
-  width: 80%;
-  color-scheme: dark;
-}
-
-.button {
-  background-color: black;
-  color: white;
-  width: 8.5em;
-  height: 2.9em;
-  border: black 0.2em solid;
-  border-radius: 11px;
-  text-align: right;
-  transition: all 0.6s ease;
-}
-
-.button:hover {
-  background-color: blue;
-}
-
-.button svg {
-  width: 1.6em;
-  margin: -0.2em 0.8em 1em;
-  position: absolute;
   display: flex;
-  transition: all 0.6s ease;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.button:hover svg {
-  transform: translateX(5px);
+.profileHeaderContainer {
+  width: 42vw;
+  height: 10vh;
+  border-radius: 10px;
+  background-color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profileTitle {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 50px;
+  font-weight: bold;
+  margin: 30px;
+}
+
+.profileEditIcon {
+  cursor: pointer;
+  font-size: 40px;
+  font-family: bold;
+  padding-top: 10px;
+  margin: 30px;
+}
+
+.profileContentsContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.leftContainer {
+  background-color: white;
+  width: 18vw;
+  height: 50vh;
+  border-radius: 10px;
+  margin: 30px;
+  box-shadow: 0px 5px 10px 2px rgb(56, 47, 47);
+}
+
+.topContainer {
+  width: 18vw;
+  height: 20vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 10px rgb(56, 47, 47);
+}
+
+.bottomContainer {
+  width: 18vw;
+  height: 30vh;
+  gap: 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pictureContainer {
+  background-color: grey;
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+}
+
+.name {
+  font-family: "Courier New", Courier, monospace;
+  font-weight: 600;
+  letter-spacing: 3px;
+  font-size: 20px;
+  color: black;
+  margin-top: 10px;
+}
+
+.rightContainers {
+  width: 20vw;
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-self: center;
+  margin: 30px;
+}
+
+.rightTopContainers {
+  width: 20vw;
+  height: 15vh;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.topContainer1 {
+  background-color: white;
+  box-shadow: 0px 5px 10px 2px rgb(56, 47, 47);
+  border-radius: 10px;
+  width: 9vw;
+  height: 15vh;
+  margin-right: 1vw;
+}
+
+.topContainer2 {
+  background-color: white;
+  box-shadow: 0px 5px 10px 2px rgb(56, 47, 47);
+  border-radius: 10px;
+  width: 9vw;
+  height: 15vh;
+  margin-left: 1vw;
+}
+
+.rightBottomContainer {
+  background-color: white;
+  box-shadow: 0px 5px 10px 2px rgb(56, 47, 47);
+  width: 20vw;
+  height: 30vh;
+  border-radius: 10px;
+}
+
+.usernameContainer {
+  width: 18vw;
+  height: 5vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.longBox {
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+  width: 15vw;
+  height: 5vh;
+  border-radius: 10px;
+}
+
+.title {
+  font-family: "Courier New", Courier, monospace;
+  margin-top: 8px;
+  margin-left: 10px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: red;
+}
+
+.label {
+  font-family: "Courier New", Courier, monospace;
+  margin-top: 3px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  letter-spacing: 3px;
+  color: black;
+}
+
+.addressContainer {
+  width: 18vw;
+  height: 5vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.addressContainer2 {
+  width: 18vw;
+  height: 5vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cityStateContainer {
+  width: 18vw;
+  height: 5vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.cityContainer {
+  width: 7vw;
+  height: 5vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stateContainer {
+  width: 4vw;
+  height: 5vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zipCodeContainer {
+  width: 7vw;
+  height: 5vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shortBox {
+  width: 6vw;
+  height: 5vh;
+  border-radius: 10px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+}
+
+.smallBox {
+  width: 4vw;
+  height: 5vh;
+  border-radius: 10px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+}
+
+.tc1_header {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 20px;
+  font-weight: 600;
+  width: 9vw;
+  height: 4vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eventNumberContainer {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 50px;
+  font-weight: bold;
+  width: 9vw;
+  height: 6vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tc2_footer {
+  width: 9vw;
+  height: 5vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gotovh_button {
+  font-family: "Courier New", Courier, monospace;
+  border-radius: 10px;
+  border-style: solid;
+  border-color: black;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.headerContainer {
+  width: 20vw;
+  height: 6vh;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.headerTitle {
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  letter-spacing: 5px;
+  margin-top: 5px;
+  margin-left: 10px;
+  width: 15vw;
+  height: 5vh;
+  font-size: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editIconContainer {
+  margin-right: 10px;
+  width: 5vw;
+  height: 5vh;
+  font-size: 25px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skillsContainer {
+  width: 20vw;
+  height: 23vh;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.skillsContainer input {
+  margin-right: 5px;
+}
+
+.group1 {
+  width: 10vw;
+  height: 23vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.skillsList1 {
+  width: 8vw;
+  height: 20vh;
+  gap: 10px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.group2 {
+  width: 10vw;
+  height: 23vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.skillsList2 {
+  width: 8vw;
+  height: 20vh;
+  gap: 10px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.editableNameInput {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 20px;
+  font-weight: 600;
+  width: 8vw;
+  margin-top: 10px;
+  text-align: center;
+  border: none;
+}
+
+.editableInput {
+  font-family: "Courier New", Courier, monospace;
+  width: 8vw;
+  border: none;
+  margin-left: 10px;
+}
+
+.editableCityInput {
+  font-family: "Courier New", Courier, monospace;
+  width: 5vw;
+  border: none;
+  margin-left: 10px;
+}
+
+.editableZipInput {
+  font-family: "Courier New", Courier, monospace;
+  width: 5vw;
+  border: none;
+  margin-left: 10px;
+}
+
+.editableSelect {
+  font-family: "Courier New", Courier, monospace;
+  width: 3vw;
+  border: none;
+  margin-left: 5px;
+}
+
+.editableSelect option {
+  font-family: "Courier New", Courier, monospace;
+  background-color: white;
+  color: black;
+}
+
+.saveButtonContainer {
+  display: flex;
+  justify-content: right;
+}
+
+.saveButton {
+  background-color: transparent;
+  cursor: pointer;
+  color: white;
+  border: white;
+  border-style: solid;
+  border-radius: 10px;
+  width: 100px;
+  height: 30px;
 }
