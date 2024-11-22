@@ -2,10 +2,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 1920px;
+  height: 768px;
 }
 
 .login-container {
-  width: 25vw;
+  width: 30vw;
   height: 35vh;
   display: flex;
   flex-direction: column;
