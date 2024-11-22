@@ -5,6 +5,9 @@ import "./header.css";
 const Header = () => {
   // Check if the user is logged in
   const isLoggedIn = !!localStorage.getItem("token");
+  console.log(localStorage.getItem("token"));
+  const isAdmin = localStorage.getItem("admin") === "true";
+  console.log(isAdmin);
 
   return (
     <header>
@@ -27,13 +30,13 @@ const Header = () => {
                 <Link to="/register">Register</Link>
               </>
             )}
-            {isLoggedIn && (
+            {isLoggedIn && !isAdmin && (
               <>
                 <Link to="/profile">Profile</Link>
-                <Link to="/event-matching">Event Management</Link>
                 <Link to="/volunteer-matching">Volunteer Matching</Link>
                 <Link to="/volunteer-history">Volunteer History</Link>
-                <button
+                <Link
+                  to="/login"
                   onClick={() => {
                     localStorage.removeItem("token");
                     window.location.href = "/login";
@@ -41,7 +44,23 @@ const Header = () => {
                   className="logout-button"
                 >
                   Logout
-                </button>
+                </Link>
+              </>
+            )}
+            {isLoggedIn && isAdmin && (
+              <>
+                <Link to="/event-matching">Event Management </Link>
+                <Link to="/reports"> Reports </Link>
+                <Link
+                  to="/login"
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    window.location.href = "/login";
+                  }}
+                  className="logout-button"
+                >
+                  Logout
+                </Link>
               </>
             )}
           </li>
