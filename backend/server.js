@@ -359,7 +359,6 @@ app.get("/api/volunteer-history/:userId", async (req, res) => {
         .json({ message: "No events found for this user." });
     }
 
-    // Extract events
     const events = volunteerRecords.map((record) => record.event);
 
     res.status(200).json({ events });
@@ -368,6 +367,88 @@ app.get("/api/volunteer-history/:userId", async (req, res) => {
     res
       .status(500)
       .json({ message: "Error fetching volunteer history.", error });
+  }
+});
+
+// Volunteer Report
+app.get("/api/volunteer-report", async (req, res) => {
+  try {
+    const users = await User.find({ admin: false }).select(
+      "username volunteerHistory"
+    );
+
+    const volunteerData = await Promise.all(
+      users.map(async (user) => {
+        const profile = await ProfileManagement.findOne({
+          user: user._id,
+        }).select("fullname");
+
+        const matches = await VolunteerMatching.find({
+          user: user._id,
+        }).populate("event");
+
+        const events = matches.map((match) => ({
+          eventname: match.event.eventname,
+          eventlocation: match.event.eventlocation,
+          date: match.event.date,
+        }));
+
+        return {
+          username: user.username,
+          fullname: profile ? profile.fullname : "No profile found",
+          events:
+            events.length > 0
+              ? events
+              : [{ eventname: "N/A", eventlocation: "N/A", date: "N/A" }],
+        };
+      })
+    );
+
+    res.status(200).json(volunteerData);
+  } catch (error) {
+    console.error("Error generating volunteer report:", error);
+    res.status(500).json({ message: "Error generating volunteer report" });
+  }
+});
+
+// Event Report
+app.get("/api/event-report", async (req, res) => {
+  try {
+    const events = await EventManagement.find();
+
+    const eventDetails = await Promise.all(
+      events.map(async (event) => {
+        const matches = await VolunteerMatching.find({
+          event: event._id,
+        }).populate("user");
+
+        const volunteers = await Promise.all(
+          matches.map(async (match) => {
+            const profile = await ProfileManagement.findOne({
+              user: match.user._id,
+            }).select("fullname");
+            return {
+              username: match.user.username,
+              fullname: profile ? profile.fullname : "No profile found",
+            };
+          })
+        );
+
+        return {
+          eventname: event.eventname,
+          eventlocation: event.eventlocation,
+          date: event.date,
+          urgency: event.urgency,
+          description: event.description,
+          volunteers,
+        };
+      })
+    );
+
+    res.status(200).json(eventDetails);
+  } catch (error) {
+    console.error("Error generating event report:", error);
+    res.status(500).json({ message: "Error generating event report" });
   }
 });
 

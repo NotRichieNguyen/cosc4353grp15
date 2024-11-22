@@ -103,7 +103,7 @@ const profileManagementSchema = new mongoose.Schema({
       "Customer Service",
       "First Aid/CPR",
       "Fundraising",
-      "Marketing/Social Media",
+      "Marketing/Social",
       "Budgeting",
       "Multitasking",
       "Tech Skills",
