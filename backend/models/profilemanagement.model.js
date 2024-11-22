@@ -90,8 +90,8 @@ const profileManagementSchema = new mongoose.Schema({
     match: /^\d{5}(-\d{4})?$/,
   },
   skills: {
-    type: String,
-    required: false,
+    type: [String],
+    required: true,
     enum: [
       "Communication",
       "Leadership",
