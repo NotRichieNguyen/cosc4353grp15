@@ -11,6 +11,7 @@ import notificationRoutes from "./routes/notifications.routes.js";
 import EventManagement from "./models/eventmanagement.model.js";
 import VolunteerMatching from "./models/volunteermatching.model.js";
 import ProfileManagement from "./models/profilemanagement.model.js";
+import Notification from "./models/notifications.model.js";
 import crypto from "crypto";
 // const jwtSecret = crypto.randomBytes(32).toString("hex");
 // console.log('jwtsecret:', jwtSecret);
@@ -45,7 +46,7 @@ function authenticateJWT(req, res, next) {
 
 // Register routes
 app.use("/api/volunteer-history", volunteerHistoryRoutes);
-app.use("/api/notifications", notificationRoutes);
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -223,17 +224,15 @@ app.get("/api/events", async (req, res) => {
 });
 
 app.post("/api/events", async (req, res) => {
-  const { eventname, eventlocation, eventskills, urgency, date, description } =
-    req.body;
+  const { eventname, eventlocation, eventskills, urgency, date, description } = req.body;
 
   try {
     const existingEvent = await EventManagement.findOne({ eventname });
 
     if (existingEvent) {
-      return res
-        .status(200)
-        .json({ message: "Event already exists", event: existingEvent });
+      return res.status(200).json({ message: "Event already exists", event: existingEvent });
     } else {
+      // Create a new event
       const newEvent = new EventManagement({
         eventname,
         eventlocation,
@@ -243,9 +242,18 @@ app.post("/api/events", async (req, res) => {
         description,
       });
       await newEvent.save();
-      return res
-        .status(201)
-        .json({ message: "New event created", event: newEvent });
+
+      // Create a notification for the new event
+      const newNotification = new Notification({
+        title: `New Event: ${eventname}`,
+        message: `A new event "${eventname}" has been created. Check it out!`,
+        users: ["all"], // Notify all users
+        createdAt: new Date(),
+      });
+
+      await newNotification.save();
+
+      return res.status(201).json({ message: "New event created and notification sent", event: newEvent });
     }
   } catch (error) {
     console.error("Error creating event:", error);
@@ -259,19 +267,46 @@ app.put("/api/events/update/:eventname", async (req, res) => {
   const updateData = req.body;
 
   try {
+    // Find the existing event before updating
+    const existingEvent = await EventManagement.findOne({ eventname });
+
+    if (!existingEvent) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    // Update the event
     const updatedEvent = await EventManagement.findOneAndUpdate(
       { eventname },
       updateData,
-      { new: true }
+      { new: true } // Return the updated document
     );
 
-    if (updatedEvent) {
-      return res
-        .status(200)
-        .json({ message: "Event updated successfully", updatedEvent });
-    } else {
-      return res.status(404).json({ message: "Event not found" });
+    // Compare the existing event with the updated event to find changes
+    let changes = [];
+    for (let key in updateData) {
+      if (existingEvent[key] !== updateData[key]) {
+        changes.push(`${key}: "${existingEvent[key]}" → "${updateData[key]}"`);
+      }
     }
+
+    // Create a notification summarizing the changes
+    const changeSummary = changes.length
+      ? changes.join(", ")
+      : "No significant changes.";
+
+    const updateNotification = new Notification({
+      title: `Event Updated: ${updatedEvent.eventname}`,
+      message: `The event "${updatedEvent.eventname}" has been updated. Changes: ${changeSummary}`,
+      users: ["all"], // Notify all users
+      createdAt: new Date(),
+    });
+
+    await updateNotification.save();
+
+    return res.status(200).json({
+      message: "Event updated successfully and notification sent",
+      updatedEvent,
+    });
   } catch (error) {
     console.error("Error updating event:", error);
     res.status(500).json({ message: "Error updating event", error });
@@ -367,6 +402,21 @@ app.get("/api/volunteer-history/:userId", async (req, res) => {
     res
       .status(500)
       .json({ message: "Error fetching volunteer history.", error });
+  }
+});
+
+// Notifications
+app.get("/api/notifications", authenticateJWT, async (req, res) => {
+  try {
+    console.log("Fetching notifications...");
+    const notifications = await Notification.find({ users: "all" })
+      .sort({ createdAt: -1 });
+
+    console.log("Notifications fetched:", notifications);
+    res.status(200).json(notifications);
+  } catch (error) {
+    console.error("Error fetching notifications:", error.message);
+    res.status(500).json({ message: "Error fetching notifications", error });
   }
 });
 

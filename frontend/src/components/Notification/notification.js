@@ -1,103 +1,80 @@
-import React, { useEffect, useState } from 'react';
-import "./notification.css";
+import React, { useEffect, useState } from "react";
+import "./notification.css"; // Import the CSS file for styling
 
 const Notification = () => {
-    const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [error, setError] = useState("");
 
-    // Fetch notifications from backend on load
-    useEffect(() => {
-        fetch("http://localhost:5000/api/notifications")
-            .then((response) => response.json())
-            .then((data) => setNotifications(data))
-            .catch((error) => console.error("Error fetching notifications:", error));
-    }, []);
-
-    // Function to show new notification (for demo purposes)
-    const showNotification = (type) => {
-        const newNotification = {
-            id: new Date().getTime(), // Unique ID based on timestamp
-            type: type,
-            content: getNotificationContent(type),
-        };
-
-        // Add the new notification to the top of the list
-        setNotifications([newNotification, ...notifications]);
-
-        // Send the notification to the backend
-        sendNotificationToBackend(type);
-    };
-
-    // Send notification to backend
-    const sendNotificationToBackend = (type) => {
-        fetch("http://localhost:5000/api/notifications", { // Adjusted endpoint
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ title: type, message: `New ${type} notification` }),
-        })
-            .then((response) => response.json())
-            .then((data) => console.log("Notification sent:", data))
-            .catch((error) => console.error("Error sending notification:", error));
-    };
-
-    // Get content based on notification type
-    const getNotificationContent = (type) => {
-        switch (type) {
-            case 'event':
-                return (
-                    <>
-                        <p><strong>New Event Available!</strong></p>
-                        <p>A new event has been created that matches your skills.</p>
-                    </>
-                );
-            case 'update':
-                return (
-                    <>
-                        <p><strong>Event Updated!</strong></p>
-                        <p>The details for an event you're attending have changed.</p>
-                    </>
-                );
-            case 'reminder':
-                return (
-                    <>
-                        <p><strong>Event Reminder!</strong></p>
-                        <p>Don't forget about your upcoming event tomorrow.</p>
-                    </>
-                );
-            default:
-                return <p>New notification!</p>;
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        console.log("Token used for fetch:", token);
+  
+        const response = await fetch("http://localhost:5000/api/notifications", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        console.log("Response status:", response.status);
+  
+        if (!response.ok) {
+          const errorMessage = `Error: ${response.status} ${response.statusText}`;
+          throw new Error(errorMessage);
         }
+  
+        const data = await response.json();
+        setNotifications(data);
+      } catch (err) {
+        console.error("Error fetching notifications:", err);
+        setError(err.message);
+      }
     };
+  
+    fetchNotifications();
+  }, []);
 
-    // Remove notification from the list
-    const removeNotification = (id) => {
-        setNotifications((prevNotifications) =>
-            prevNotifications.filter((notification) => notification.id !== id)
-        );
-    };
+  if (error) {
+    return <div className="notification-error">Error: {error}</div>;
+  }
 
-    return (
-        <div>
-            <button className="notification-btn" onClick={() => showNotification('event')}>New Event Notification</button>
-            <button className="notification-btn" onClick={() => showNotification('update')}>Update Notification</button>
-            <button className="notification-btn" onClick={() => showNotification('reminder')}>Reminder Notification</button>
-
-            <div id="notification-container">
-                {notifications.map((notification) => (
-                    <div key={notification.id || notification._id} className="notification show">
-                        {/* Render based on content if it's newly created, or title/message if from backend */}
-                        {notification.content || (
-                            <>
-                                <p><strong>{notification.title}</strong></p>
-                                <p>{notification.message}</p>
-                            </>
-                        )}
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
+  return (
+    <div className="notification-container">
+      <h1>Notifications</h1>
+      {notifications.length > 0 ? (
+        <ul>
+          {notifications.map((notification) => (
+            <li key={notification._id} className="notification-item">
+              <h3>{notification.title}</h3>
+              <p>{notification.message}</p>
+              {notification.eventName && (
+                <p>
+                  <strong>Event:</strong> {notification.eventName}
+                </p>
+              )}
+              {notification.eventDescription && (
+                <p>{notification.eventDescription}</p>
+              )}
+              {notification.eventDate && (
+                <p>
+                  <strong>Date:</strong>{" "}
+                  {new Date(notification.eventDate).toLocaleString()}
+                </p>
+              )}
+              <p>
+                <strong>Created At:</strong>{" "}
+                {new Date(notification.createdAt).toLocaleString()}
+              </p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No notifications available.</p>
+      )}
+    </div>
+  );
 };
 
 export default Notification;

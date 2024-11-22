@@ -35,6 +35,7 @@ const Header = () => {
                 <Link to="/profile">Profile</Link>
                 <Link to="/volunteer-matching">Volunteer Matching</Link>
                 <Link to="/volunteer-history">Volunteer History</Link>
+                <Link to="/notifications">Notification</Link>
                 <Link
                   to="/login"
                   onClick={() => {

@@ -45,6 +45,7 @@ function App() {
         <Route path="/event-matching" element={<EventManagement />} />
         <Route path="/volunteer-matching" element={<VolunteerMatching />} />
         <Route path="/volunteer-history" element={<VolunteerHistory />} />
+        <Route path="/notifications" element={<Notification />} />
         <Route path="/reports" element={<Reports />} />
       </Routes>
       <Footer />
