@@ -5,6 +5,7 @@ const eventManagementSchema = new mongoose.Schema({
     type: String,
     required: true,
     maxlength: 100,
+    unique: true,
   },
   eventlocation: {
     type: String,

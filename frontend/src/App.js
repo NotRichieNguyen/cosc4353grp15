@@ -7,6 +7,7 @@ import Login from "./pages/Login Form/login";
 import Register from "./pages/Registration Form/register";
 import ProfileManagement from "./pages/Profile Management/profile";
 import EventManagement from "./pages/Event Management/eventManagement";
+import Reports from "./pages/Reports/reports";
 import VolunteerMatching from "./pages/Volunteer Matching/volunteerMatching";
 import VolunteerHistory from "./pages/Volunteer History/volunteerHistory";
 import Notification from "./components/Notification/notification";
@@ -44,6 +45,7 @@ function App() {
         <Route path="/event-matching" element={<EventManagement />} />
         <Route path="/volunteer-matching" element={<VolunteerMatching />} />
         <Route path="/volunteer-history" element={<VolunteerHistory />} />
+        <Route path="/reports" element={<Reports />} />
       </Routes>
       <Footer />
     </Router>

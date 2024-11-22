@@ -13,7 +13,7 @@ const ProfileManagement = () => {
     skills: "",
     preferences: "",
     availability: "",
-  })
+  });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

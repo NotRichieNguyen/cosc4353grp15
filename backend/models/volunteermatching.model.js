@@ -1,33 +1,19 @@
 import mongoose from "mongoose";
 
 const volunteermatchingSchema = new mongoose.Schema({
-  volunteername: {
-    type: String,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
-  volunteerskills: {
-    type: [String],
-    enum: [
-      "Communication",
-      "Leadership",
-      "Organization",
-      "Time Management",
-      "Problem Solving",
-      "Teamwork",
-      "Event Planning",
-      "Customer Service",
-      "First Aid/CPR",
-      "Fundraising",
-      "Marketing/Social Media",
-      "Budgeting",
-      "Multitasking",
-      "Tech Skills",
-    ],
+  event: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "EventManagement",
     required: true,
   },
-  volunteeravailability: {
+  createdAt: {
     type: Date,
-    required: true,
+    default: Date.now,
   },
 });
 

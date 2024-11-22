@@ -21,7 +21,7 @@ const app = express();
 app.use(
   cors({
     origin: ["http://localhost:3000"],
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT"],
     credentials: true,
   })
 );
@@ -89,15 +89,22 @@ app.post("/register", async (req, res) => {
 // Login endpoint
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
-
   try {
     const user = await User.findOne({ username });
     if (user && (await bcrypt.compare(password, user.password))) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "24h",
+      const token = jwt.sign(
+        { id: user._id, admin: user.admin },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "24h",
+        }
+      );
+      res.status(200).json({
+        message: "Login successful.",
+        token,
+        admin: user.admin,
+        id: user._id,
       });
-
-      res.status(200).json({ message: "Login successful.", token });
     } else {
       res.status(401).json({ message: "Invalid username or password." });
     }
@@ -230,28 +237,32 @@ app.post("/api/events", async (req, res) => {
   }
 });
 
-app.post("/api/events/update/:id", async (req, res) => {
-  const { eventName } = req.params;
+//Update Events
+app.put("/api/events/update/:eventname", async (req, res) => {
+  const { eventname } = req.params;
   const updateData = req.body;
 
   try {
-    const updatedEvent = await EventManagement.findByIdAndUpdate(
-      eventName,
+    const updatedEvent = await EventManagement.findOneAndUpdate(
+      { eventname },
       updateData,
       { new: true }
     );
 
-    if (!updatedEvent) {
+    if (updatedEvent) {
+      return res
+        .status(200)
+        .json({ message: "Event updated successfully", updatedEvent });
+    } else {
       return res.status(404).json({ message: "Event not found" });
     }
-
-    res.json({ message: "Event updated successfully", updatedEvent });
   } catch (error) {
     console.error("Error updating event:", error);
     res.status(500).json({ message: "Error updating event", error });
   }
 });
 
+//Volunteer Matching
 app.post("/api/volunteers", async (req, res) => {
   const { volunteerName, volunteerSkills, volunteerAvailability } = req.body;
 
@@ -284,6 +295,63 @@ app.post("/api/volunteers", async (req, res) => {
   } catch (error) {
     console.error("Error finding matching events:", error);
     res.status(500).json({ message: "Error finding matching events", error });
+  }
+});
+
+//Matched Volunteers with Events
+app.post("/api/volunteer-matching", async (req, res) => {
+  const { eventId, userId } = req.body;
+
+  try {
+    const existingMatch = await VolunteerMatching.findOne({
+      event: eventId,
+      user: userId,
+    });
+    if (existingMatch) {
+      return res
+        .status(400)
+        .json({ message: "User is already registered for this event" });
+    }
+
+    const newMatch = new VolunteerMatching({
+      user: userId,
+      event: eventId,
+    });
+
+    await newMatch.save();
+    res
+      .status(201)
+      .json({ message: "Volunteer registered successfully", match: newMatch });
+  } catch (error) {
+    console.error("Error registering volunteer:", error);
+    res.status(500).json({ message: "Error registering volunteer", error });
+  }
+});
+
+//Volunteering History
+app.get("/api/volunteer-history/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const volunteerRecords = await VolunteerMatching.find({
+      user: userId,
+    }).populate("event");
+
+    if (!volunteerRecords.length) {
+      return res
+        .status(404)
+        .json({ message: "No events found for this user." });
+    }
+
+    // Extract events
+    const events = volunteerRecords.map((record) => record.event);
+
+    res.status(200).json({ events });
+  } catch (error) {
+    console.error("Error fetching volunteer history:", error);
+    res
+      .status(500)
+      .json({ message: "Error fetching volunteer history.", error });
   }
 });
 
