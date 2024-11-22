@@ -201,23 +201,22 @@ const ProfileManagement = () => {
                     value={formData.skills}
                     onChange={handleChange}
                   >
-                    <option value="communication">Communication</option>
-                    <option value="leadership">Leadership</option>
-                    <option value="organization">Organization</option>
-                    <option value="time_management">Time Management</option>
-                    <option value="problem_solving">Problem Solving</option>
-                    <option value="teamwork">Teamwork</option>
-                    <option value="event_planning">Event Planning</option>
-                    <option value="customer_service"> Customer Service</option>
-                    <option value="first_aidcpr"> First Aid/CPR </option>
-                    <option value="fundraising"> Fundraising </option>
-                    <option value="marketing_socialmedia">
-                      {" "}
-                      Marketing/Social Media{" "}
+                    <option value="Communication">Communication</option>
+                    <option value="Leadership">Leadership</option>
+                    <option value="Organization">Organization</option>
+                    <option value="Time Management">Time Management</option>
+                    <option value="Problem Solving">Problem Solving</option>
+                    <option value="Teamwork">Teamwork</option>
+                    <option value="Event Planning">Event Planning</option>
+                    <option value="Customer Service">Customer Service</option>
+                    <option value="First Aid/CPR">First Aid/CPR</option>
+                    <option value="Fundraising">Fundraising</option>
+                    <option value="Marketing/Social Media">
+                      Marketing/Social Media
                     </option>
-                    <option value="budgeting"> Budgeting </option>
-                    <option value="multitasking"> Multitasking </option>
-                    <option value="techskills"> Tech Skills </option>
+                    <option value="Budgeting">Budgeting</option>
+                    <option value="Multitasking">Multitasking</option>
+                    <option value="Tech Skills">Tech Skills</option>
                   </select>
                 </p>
                 <p>
