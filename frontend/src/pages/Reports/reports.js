@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { CSVLink } from "react-csv";
 import { RxTriangleLeft } from "react-icons/rx";
 import { RxTriangleRight } from "react-icons/rx";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import "./reports.css";
 
 const Reports = () => {
@@ -92,6 +95,54 @@ const Reports = () => {
     }
   };
 
+  const generatePDF = (data, reportType) => {
+    const doc = new jsPDF();
+    doc.text(`${reportType} Report`, 20, 10);
+
+    const headers =
+      reportType === "Volunteer"
+        ? ["Username", "Name", "Event Name", "Location", "Event Date"]
+        : [
+            "Event Name",
+            "Location",
+            "Date",
+            "Urgency",
+            "Description",
+            "Volunteer Name",
+            "Volunteer Username",
+          ];
+
+    const rows =
+      reportType === "Volunteer"
+        ? data.flatMap((volunteer) =>
+            volunteer.events.map((event) => [
+              volunteer.username,
+              volunteer.fullname,
+              event.eventname,
+              event.eventlocation,
+              new Date(event.date).toLocaleDateString(),
+            ])
+          )
+        : data.flatMap((event) =>
+            event.volunteers.map((volunteer) => [
+              event.eventname,
+              event.eventlocation,
+              new Date(event.date).toLocaleDateString(),
+              event.urgency,
+              event.description,
+              volunteer.fullname,
+              volunteer.username,
+            ])
+          );
+
+    doc.autoTable({
+      head: [headers],
+      body: rows,
+    });
+
+    doc.save(`${reportType.toLowerCase()}-report.pdf`);
+  };
+
   return (
     <div className="reports">
       <div className="reportsContainer">
@@ -104,6 +155,30 @@ const Reports = () => {
           {error && <p>{error}</p>}
           {!loading && !error && activeTab === "volunteer" && (
             <div className="volunteerReport">
+              <div className="downloadHeader">
+                <CSVLink
+                  data={volunteerReport}
+                  headers={[
+                    { label: "Username", key: "username" },
+                    { label: "Name", key: "fullname" },
+                    { label: "Event Name", key: "events[0].eventname" },
+                    { label: "Location", key: "events[0].eventlocation" },
+                    { label: "Event Date", key: "events[0].date" },
+                  ]}
+                  filename="volunteer-report.csv"
+                  className="csvButton"
+                >
+                  <button className="volunteerCSV">
+                    Export Volunteer Report to CSV
+                  </button>
+                </CSVLink>
+                <button
+                  className="volunteerPDF"
+                  onClick={() => generatePDF(volunteerReport, "Volunteer")}
+                >
+                  Export Volunteer Report to PDF
+                </button>
+              </div>
               <div className="volunteerReportTableContainer">
                 <table className="volunteerTable">
                   <thead>
@@ -170,6 +245,38 @@ const Reports = () => {
           {!loading && !error && activeTab === "event" && (
             <div className="eventReports">
               <div className="eventReportsContainer">
+                <div className="downloadHeader">
+                  <CSVLink
+                    data={eventReport}
+                    headers={[
+                      { label: "Event Name", key: "eventname" },
+                      { label: "Location", key: "eventlocation" },
+                      { label: "Date", key: "date" },
+                      { label: "Urgency", key: "urgency" },
+                      { label: "Description", key: "description" },
+                      {
+                        label: "Volunteer Name",
+                        key: "volunteers[0].fullname",
+                      },
+                      {
+                        label: "Volunteer Username",
+                        key: "volunteers[0].username",
+                      },
+                    ]}
+                    filename="event-report.csv"
+                    className="csvButton"
+                  >
+                    <button className="eventsCSV">
+                      Export Event Report to CSV
+                    </button>
+                  </CSVLink>
+                  <button
+                    className="eventsPDF"
+                    onClick={() => generatePDF(eventReport, "Event")}
+                  >
+                    Export Event Report to PDF
+                  </button>
+                </div>
                 <table className="eventTable">
                   <thead>
                     <tr>
