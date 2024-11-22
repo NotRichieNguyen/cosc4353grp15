@@ -25,6 +25,7 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json()); // Parse incoming JSON data
 // Middleware to verify JWT and extract user ID
 function authenticateJWT(req, res, next) {
@@ -42,8 +43,6 @@ function authenticateJWT(req, res, next) {
   });
 }
 
-
-// Register routes
 app.use("/api/volunteer-history", volunteerHistoryRoutes);
 app.use("/api/notifications", notificationRoutes);
 
@@ -109,69 +108,35 @@ app.post("/login", async (req, res) => {
 console.log('proces.env.JWT_SECRET:', process.env.JWT_SECRET);
 
 // Profile Management
-app.get("/api/profile", authenticateJWT, async (req, res) => {
+app.get("/api/profile", async (req, res) => {
   try {
-    const userId = req.user.id; // Get the user ID from the JWT token
-    const profile = await ProfileManagement.findOne({ user: userId });
-    console.log('userID: ', userID);
-    if (!profile) {
-      return res.status(404).json({ message: "Profile not found" });
-    }
-
-    res.json(profile);
-  } catch (error) {
-    console.error("Error fetching profile:", error);
-    res.status(500).json({ message: "Server error while fetching profile" });
+    const profiles = await ProfileManagement.find({ });
+    res.json(profiles)
+  }
+  catch (error) {
+    console.error("Profile not found: ", error)
+    res.status(500).json({ message: "Profile not found: ", error })
   }
 });
-
-// Create or update the user's profile
-app.post("/api/profile", authenticateJWT, async (req, res) => {
+app.post("/api/profile", async (req, res) => {
   const { fullname, address1, address2, city, state, zipcode, skills, preferences, availability } = req.body;
-  
   try {
-    const userId = req.user.id; // Get the user ID from the JWT token
-
-    // Check if the user already has a profile
-    let profile = await ProfileManagement.findOne({ user: userId });
-
-    if (profile) {
-      // Update the existing profile
-      profile.fullname = fullname || profile.fullname;
-      profile.address1 = address1 || profile.address1;
-      profile.address2 = address2 || profile.address2;
-      profile.city = city || profile.city;
-      profile.state = state || profile.state;
-      profile.zipcode = zipcode || profile.zipcode;
-      profile.skills = skills || profile.skills;
-      profile.preferences = preferences || profile.preferences;
-      profile.availability = availability || profile.availability;
-
-      await profile.save();
-      return res.status(200).json({ message: "Profile updated successfully", profile });
-    } else {
-      // Create a new profile for the user
-      const newProfile = new ProfileManagement({
-        user: userId, // Link the profile to the user
-        fullname,
-        address1,
-        address2,
-        city,
-        state,
-        zipcode,
-        skills,
-        preferences,
-        availability
-      });
-
-      await newProfile.save();
-      return res.status(201).json({ message: "Profile created successfully", profile: newProfile });
+    const profileExists = await ProfileManagement.findOne({ fullname });
+    if (profileExists) {
+      return res.status(200).json({ message: "Profile updated successfully", profile: profileExists });
     }
-  } catch (error) {
-    console.error("Error creating or updating profile:", error);
-    res.status(500).json({ message: "Error creating or updating profile" });
+    else {
+      const newProfile = new ProfileManagement({ fullname, address1, address2, city, state, zipcode, skills, preferences, availability });
+      await newProfile.save();
+      return res.status(201).json({ message: "New profile created", profile: newProfile }); 
+    }
+  }
+  catch (error) {
+    console.error("Profile could not be created: ", error)
+    res.status(500).json({ message: "Profile could not be created: ", error })
   }
 });
+
 
 
 // Event management
