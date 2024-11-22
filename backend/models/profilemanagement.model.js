@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const profileManagementSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // Referencing the User model
+    ref: "User", // Referencing the User model
     required: true,
   },
   fullname: {
@@ -90,8 +90,8 @@ const profileManagementSchema = new mongoose.Schema({
     match: /^\d{5}(-\d{4})?$/,
   },
   skills: {
-    type: String,
-    required: true,
+    type: [String],
+    required: false,
     enum: [
       "Communication",
       "Leadership",
@@ -108,14 +108,6 @@ const profileManagementSchema = new mongoose.Schema({
       "Multitasking",
       "Tech Skills",
     ],
-  },
-  preferences: {
-    type: String,
-    required: true,
-  },
-  availability: {
-    type: String,
-    required: true,
   },
 });
 
